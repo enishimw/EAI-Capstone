@@ -1,0 +1,626 @@
+[
+    {
+        "o_id": 1550411704,
+        "locale_name": "FULL BLOOD COUNT (FBC)"
+    },
+    {
+        "o_id": 1634177035,
+        "locale_name": "BLEEDING TIME"
+    },
+    {
+        "o_id": 1987953306,
+        "locale_name": "CLOTING TIME"
+    },
+    {
+        "o_id": 461012845,
+        "locale_name": "BLOOD GROUP"
+    },
+    {
+        "o_id": 544254460,
+        "locale_name": "SEDIMENTATION RATE"
+    },
+    {
+        "o_id": 894360143,
+        "locale_name": "PROTHROMBIN TIME"
+    },
+    {
+        "o_id": 1514894558,
+        "locale_name": "T.H (Total Hemoglobin)"
+    },
+    {
+        "o_id": 1866572193,
+        "locale_name": "TCK/PARTIAL TROMBOPLASTIN TIME"
+    },
+    {
+        "o_id": 1952436784,
+        "locale_name": "FIBRINOGEN"
+    },
+    {
+        "o_id": 424938627,
+        "locale_name": "CD4 COUNT"
+    },
+    {
+        "o_id": 777173266,
+        "locale_name": "THROMBIN TIME"
+    },
+    {
+        "o_id": 858319845,
+        "locale_name": "BLOOD SUGAR"
+    },
+    {
+        "o_id": 1478820980,
+        "locale_name": "UREA"
+    },
+    {
+        "o_id": 1831057095,
+        "locale_name": "CREATININ"
+    },
+    {
+        "o_id": 1916396374,
+        "locale_name": "URIC ACID"
+    },
+    {
+        "o_id": 120986681,
+        "locale_name": "TOTAL CHOLESTEROL"
+    },
+    {
+        "o_id": 739004040,
+        "locale_name": "TOTAL BILIRUBIN"
+    },
+    {
+        "o_id": 822803227,
+        "locale_name": "DIRECT BILIRUBIN"
+    },
+    {
+        "o_id": 1174869482,
+        "locale_name": "SGOT-ASAT"
+    },
+    {
+        "o_id": 1797080701,
+        "locale_name": "SGPT-ALAT"
+    },
+    {
+        "o_id": 1880879308,
+        "locale_name": "GAMMA GT"
+    },
+    {
+        "o_id": 84946271,
+        "locale_name": "CALCIUM TOTAL"
+    },
+    {
+        "o_id": 720264750,
+        "locale_name": "MAGNESIUM"
+    },
+    {
+        "o_id": 1071941809,
+        "locale_name": "ALBUMIN"
+    },
+    {
+        "o_id": 1155605760,
+        "locale_name": "CHRORURE"
+    },
+    {
+        "o_id": 1778341779,
+        "locale_name": "TOTAL PROTEIN"
+    },
+    {
+        "o_id": 2130018402,
+        "locale_name": "LDH"
+    },
+    {
+        "o_id": 66204405,
+        "locale_name": "AMYLASE"
+    },
+    {
+        "o_id": 684224324,
+        "locale_name": "PHOSPHATASE ALCALIN"
+    },
+    {
+        "o_id": 1036425687,
+        "locale_name": "NA+"
+    },
+    {
+        "o_id": 1121766054,
+        "locale_name": "K+"
+    },
+    {
+        "o_id": 1473865481,
+        "locale_name": "CA+"
+    },
+    {
+        "o_id": 2094502296,
+        "locale_name": "TRYGLYCERIDE"
+    },
+    {
+        "o_id": 28164715,
+        "locale_name": "HDL CHOLESTEROL"
+    },
+    {
+        "o_id": 380271866,
+        "locale_name": "LDL CHOLESTEROL"
+    },
+    {
+        "o_id": 1000384845,
+        "locale_name": "LIPASE"
+    },
+    {
+        "o_id": 1086249948,
+        "locale_name": "GLYCATED HB A1"
+    },
+    {
+        "o_id": 1438348463,
+        "locale_name": "CA15-3"
+    },
+    {
+        "o_id": 2058461502,
+        "locale_name": "URINE/SEDIMENT"
+    },
+    {
+        "o_id": 261084033,
+        "locale_name": "URINARY CHEMISTRY"
+    },
+    {
+        "o_id": 344198160,
+        "locale_name": "GRAM STAINING"
+    },
+    {
+        "o_id": 964869859,
+        "locale_name": "UROCULTURE"
+    },
+    {
+        "o_id": 1318644594,
+        "locale_name": "ALBUMINURIA"
+    },
+    {
+        "o_id": 1402275269,
+        "locale_name": "GLUCOSURIA"
+    },
+    {
+        "o_id": 2022946388,
+        "locale_name": "CSF (CEREBRAL SPINAL FLUID)/DIRECT"
+    },
+    {
+        "o_id": 208266023,
+        "locale_name": "PUNCTION FLUID/DIRECT"
+    },
+    {
+        "o_id": 291904950,
+        "locale_name": "COPROCULTURE"
+    },
+    {
+        "o_id": 645680665,
+        "locale_name": "HEMOCULTURE"
+    },
+    {
+        "o_id": 1266350312,
+        "locale_name": "CSF (CEREBRAL SPINAL FLUID) CULTURE"
+    },
+    {
+        "o_id": 1349981563,
+        "locale_name": "BODY FUID PUNCTION CULTURE"
+    },
+    {
+        "o_id": 1699563466,
+        "locale_name": "ANTIBIOGRAM"
+    },
+    {
+        "o_id": 172748893,
+        "locale_name": "VAGINAL/URETHRAL SWAB"
+    },
+    {
+        "o_id": 524299564,
+        "locale_name": "STOOL /DIRECT EXAM"
+    },
+    {
+        "o_id": 610164671,
+        "locale_name": "GE (BLOOD SMEAL)"
+    },
+    {
+        "o_id": 1230276622,
+        "locale_name": "STOOL ANALYSIS"
+    },
+    {
+        "o_id": 1582381713,
+        "locale_name": "THICK BLOOD SMEAR"
+    },
+    {
+        "o_id": 1664046944,
+        "locale_name": "TPHA"
+    },
+    {
+        "o_id": 136675827,
+        "locale_name": "RPR"
+    },
+    {
+        "o_id": 488780354,
+        "locale_name": "WIDAL"
+    },
+    {
+        "o_id": 574123221,
+        "locale_name": "HELICOBACTER PYLORI/ BLOOD"
+    },
+    {
+        "o_id": 926325156,
+        "locale_name": "HELICOBACTER PYLORI/ STOOL"
+    },
+    {
+        "o_id": 1544342071,
+        "locale_name": "MNI RAPID TEST"
+    },
+    {
+        "o_id": 1628005510,
+        "locale_name": "ASLO"
+    },
+    {
+        "o_id": 1980207465,
+        "locale_name": "ARTHRI TEST"
+    },
+    {
+        "o_id": 454935544,
+        "locale_name": "CRP TEST"
+    },
+    {
+        "o_id": 538606667,
+        "locale_name": "TOXO IGG"
+    },
+    {
+        "o_id": 890285786,
+        "locale_name": "TOXO IGM"
+    },
+    {
+        "o_id": 1525603245,
+        "locale_name": "ROSE BENGALE"
+    },
+    {
+        "o_id": 1877701692,
+        "locale_name": "RUBEOLE IGG"
+    },
+    {
+        "o_id": 1960945295,
+        "locale_name": "RUBEOLE IGM"
+    },
+    {
+        "o_id": 436196126,
+        "locale_name": "CHLAMIDIA TRACHOMATIS"
+    },
+    {
+        "o_id": 787746273,
+        "locale_name": "PREGNANCY TEST"
+    },
+    {
+        "o_id": 871546480,
+        "locale_name": "SPERMOGRAMME"
+    },
+    {
+        "o_id": 1489561795,
+        "locale_name": "EIA AG HBS"
+    },
+    {
+        "o_id": 1841628498,
+        "locale_name": "EIA AC HBS"
+    },
+    {
+        "o_id": 1925428773,
+        "locale_name": "EIA AC HCV"
+    },
+    {
+        "o_id": 131719348,
+        "locale_name": "AG CRYPTO/CSF (CEREBRAL SPINAL FLUID)"
+    },
+    {
+        "o_id": 752229639,
+        "locale_name": "HIV RAIPID TEST"
+    },
+    {
+        "o_id": 833376150,
+        "locale_name": "FOBIN STOOL"
+    },
+    {
+        "o_id": 1185609849,
+        "locale_name": "CA 125"
+    },
+    {
+        "o_id": 1806117576,
+        "locale_name": "AGHBE"
+    },
+    {
+        "o_id": 1891452763,
+        "locale_name": "AB HBE"
+    },
+    {
+        "o_id": 96202794,
+        "locale_name": "CMV IGG"
+    },
+    {
+        "o_id": 716186301,
+        "locale_name": "CMV IGM"
+    },
+    {
+        "o_id": 1066295052,
+        "locale_name": "HEMATOCRITE"
+    },
+    {
+        "o_id": 1149536671,
+        "locale_name": "PLAQUETTES"
+    },
+    {
+        "o_id": 1770076782,
+        "locale_name": "WHITE BLOOD CELL COUNT"
+    },
+    {
+        "o_id": 2124371185,
+        "locale_name": "EMMEL TEST"
+    },
+    {
+        "o_id": 60129600,
+        "locale_name": "RETICULOCYTES"
+    },
+    {
+        "o_id": 680670163,
+        "locale_name": "HB ELECTROPHORESIS"
+    },
+    {
+        "o_id": 1013476514,
+        "locale_name": "MYELOGRAM"
+    },
+    {
+        "o_id": 1097242933,
+        "locale_name": "FERRITINE"
+    },
+    {
+        "o_id": 1451019140,
+        "locale_name": "SERUM IRON"
+    },
+    {
+        "o_id": 2071553047,
+        "locale_name": "PHOSPHORE"
+    },
+    {
+        "o_id": 7837414,
+        "locale_name": "TIBC"
+    },
+    {
+        "o_id": 357417801,
+        "locale_name": "SEDEROPHILIN"
+    },
+    {
+        "o_id": 977960408,
+        "locale_name": "CPK"
+    },
+    {
+        "o_id": 1329639083,
+        "locale_name": "PROTEIN ELECTROPHORESIS"
+    },
+    {
+        "o_id": 1415502650,
+        "locale_name": "BLOOD GAZ"
+    },
+    {
+        "o_id": 2036037005,
+        "locale_name": "GLYCOSE CHALLENGE TEST"
+    },
+    {
+        "o_id": 240231964,
+        "locale_name": "TRIGLYCERIDES LEVELS"
+    },
+    {
+        "o_id": 321900783,
+        "locale_name": "CREATININ KINASE–MB"
+    },
+    {
+        "o_id": 941886846,
+        "locale_name": "CSF SPECIAL STAINING"
+    },
+    {
+        "o_id": 1294122945,
+        "locale_name": "SPUTUM SPECIAL STAINING"
+    },
+    {
+        "o_id": 1379461200,
+        "locale_name": "SPUTUM CULTURE"
+    },
+    {
+        "o_id": 1731527971,
+        "locale_name": "FLUID CULTURE"
+    },
+    {
+        "o_id": 204715954,
+        "locale_name": "SPECIAL CULTURE MEDIA"
+    },
+    {
+        "o_id": 285859845,
+        "locale_name": "OTHER CULTURES"
+    },
+    {
+        "o_id": 637932180,
+        "locale_name": "WRIGHT"
+    },
+    {
+        "o_id": 1260146535,
+        "locale_name": "WAALER ROSE"
+    },
+    {
+        "o_id": 1343945206,
+        "locale_name": "PBD"
+    },
+    {
+        "o_id": 1696016985,
+        "locale_name": "ASDOR"
+    },
+    {
+        "o_id": 183322408,
+        "locale_name": "TSH"
+    },
+    {
+        "o_id": 535556539,
+        "locale_name": "FT3"
+    },
+    {
+        "o_id": 618668554,
+        "locale_name": "FT4"
+    },
+    {
+        "o_id": 1241406621,
+        "locale_name": "TT3"
+    },
+    {
+        "o_id": 1593084268,
+        "locale_name": "TT4"
+    },
+    {
+        "o_id": 1676753919,
+        "locale_name": "ESTRADIOL"
+    },
+    {
+        "o_id": 147805262,
+        "locale_name": "PROGESTERONE"
+    },
+    {
+        "o_id": 499484369,
+        "locale_name": "PROLACTINE"
+    },
+    {
+        "o_id": 583152544,
+        "locale_name": "TPSA"
+    },
+    {
+        "o_id": 936930355,
+        "locale_name": "FPSA"
+    },
+    {
+        "o_id": 1557569154,
+        "locale_name": "LH"
+    },
+    {
+        "o_id": 1638714133,
+        "locale_name": "FSH"
+    },
+    {
+        "o_id": 1990813156,
+        "locale_name": "CORTISOL"
+    },
+    {
+        "o_id": 463967863,
+        "locale_name": "TESTOSTERONE"
+    },
+    {
+        "o_id": 549306566,
+        "locale_name": "HORMONAL DOSAGE/PER HORMONE"
+    },
+    {
+        "o_id": 901414313,
+        "locale_name": "RED BLOOD CELL COUNT"
+    },
+    {
+        "o_id": 1521528376,
+        "locale_name": "HEMOGLOBIN"
+    },
+    {
+        "o_id": 1871632523,
+        "locale_name": "MCV (Mean Corpuscular Volume)"
+    },
+    {
+        "o_id": 1955296538,
+        "locale_name": "MCH (Mean Corpuscular Hemoglobin)"
+    },
+    {
+        "o_id": 427927533,
+        "locale_name": "MCHC (Mean Corpuscular Hemoglobin Concentration)"
+    },
+    {
+        "o_id": 782225532,
+        "locale_name": "RDW-SD"
+    },
+    {
+        "o_id": 865338063,
+        "locale_name": "RDW-CV"
+    },
+    {
+        "o_id": 1486012254,
+        "locale_name": "PDW"
+    },
+    {
+        "o_id": 1818814497,
+        "locale_name": "MPV"
+    },
+    {
+        "o_id": 1902451376,
+        "locale_name": "P_LCR"
+    },
+    {
+        "o_id": 107198211,
+        "locale_name": "PCT (Plateletcrit)"
+    },
+    {
+        "o_id": 729407890,
+        "locale_name": "Neutrophil"
+    },
+    {
+        "o_id": 813044325,
+        "locale_name": "Lymphocyte"
+    },
+    {
+        "o_id": 1162628340,
+        "locale_name": "Monocyte"
+    },
+    {
+        "o_id": 1783298375,
+        "locale_name": "Eosinophil"
+    },
+    {
+        "o_id": 2135370710,
+        "locale_name": "Basophil"
+    },
+    {
+        "o_id": 73221305,
+        "locale_name": "TOXO IGM"
+    },
+    {
+        "o_id": 693891336,
+        "locale_name": "TOXO IGG"
+    },
+    {
+        "o_id": 1045439387,
+        "locale_name": "HEPATITE EIA HB"
+    },
+    {
+        "o_id": 1127111786,
+        "locale_name": "HEPATITE  EIA HCV"
+    },
+    {
+        "o_id": 1747226365,
+        "locale_name": "ketonuria"
+    },
+    {
+        "o_id": 2099329868,
+        "locale_name": "urea"
+    },
+    {
+        "o_id": 37705183,
+        "locale_name": "glycemia"
+    },
+    {
+        "o_id": 389383854,
+        "locale_name": "serowidal"
+    },
+    {
+        "o_id": 1009922865,
+        "locale_name": "cl-"
+    },
+    {
+        "o_id": 1443274259,
+        "locale_name": "GLYCEMIA (P)"
+    },
+    {
+        "o_id": 2065484002,
+        "locale_name": "NFS(P)"
+    },
+    {
+        "o_id": 1664373,
+        "locale_name": "SEROLOGIE H. PYLORI"
+    },
+    {
+        "o_id": 353867716,
+        "locale_name": "hemoglobine glyque"
+    }
+]

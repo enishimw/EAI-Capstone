@@ -14,11 +14,12 @@ if not api_key:
 openAiClient = OpenAI(api_key=api_key)
 
 # Your app's API endpoint
-APP_API_ENDPOINT = 'https://x.clinicplus.pro/api'
+APP_API_ENDPOINT = 'https://x.clinicplus.pro/api/'
 
 # Function to call your app's API with a specified HTTP method
 def call_app_api(action, data, method='POST'):
     url = f"{APP_API_ENDPOINT}/{action}"
+    url = f"{APP_API_ENDPOINT}/"
     
     # Handle different HTTP methods
     if method.upper() == 'GET':
@@ -91,6 +92,14 @@ def process_prompt():
         'status': 'success',
         'content': llm_response.content  # Ensure this is a string or JSON-serializable object
     })
+
+def simulate_prompt():
+    prompt= "hello!!!"
+
+    llm_response = process_prompt_with_llm(prompt)
+
+    print("Sent response...")
+
 
 # Run the Flask app
 if __name__ == '__main__':
