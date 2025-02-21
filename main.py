@@ -2,6 +2,7 @@ import os
 from openai import OpenAI
 import requests
 from flask import Flask, request, jsonify
+from LabTestAgent import LabTestAgent
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -15,6 +16,10 @@ openAiClient = OpenAI(api_key=api_key)
 
 # Your app's API endpoint
 APP_API_ENDPOINT = 'https://x.clinicplus.pro/api/'
+
+lab_tests_path = "lab_tests.json"
+
+lab_test_agent = LabTestAgent(api_key=api_key, lab_tests_path=lab_tests_path)
 
 # Function to call your app's API with a specified HTTP method
 def call_app_api(action, data, method='POST'):
@@ -36,8 +41,6 @@ def call_app_api(action, data, method='POST'):
     # Return the API response
     return response.json()
 
-# Function to process the user prompt using the LLM
-def process_prompt_with_llm(prompt):
     response = openAiClient.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -73,32 +76,31 @@ def determine_action(llm_response):
 def process_prompt():
     # Get the prompt from the request
     user_prompt = request.json.get('prompt')
+    user_id = request.json.get('user_id')
+    doctor_specializations = request.json.get('doctor_specializations')
+    user_type = request.json.get('user_type')
+    procedure_id = request.json.get('procedure_id')
+    patient_history = request.json.get('patient_history', {})
 
     print("User prompted: ", user_prompt)
-    
-    # Process the prompt with the LLM
-    llm_response = process_prompt_with_llm(user_prompt)
+    print("Specializations: ", doctor_specializations)
 
-    print("LLM says: ", llm_response.content)
+    # Process the prompt with the LabTestAgent
+    result = lab_test_agent.process_request(
+        type="doctor_lab_request",
+        user_id=user_id,
+        user_type=user_type,
+        doctor_specializations=doctor_specializations,
+        prompt=user_prompt,
+        procedure_id=procedure_id,
+        patient_history=patient_history
+    )
     
-    # # Determine the action, data, and HTTP method based on the LLM's response
-    # action, data, method = determine_action(llm_response)
-    
-    # # Call your app's API endpoint with the specified method
-    # api_response = call_app_api(action, data, method)
-    
-    # Return the API response to your app
+    # Return the result to your app
     return jsonify({
         'status': 'success',
-        'content': llm_response.content  # Ensure this is a string or JSON-serializable object
+        'content': result  # Ensure this is a string or JSON-serializable object
     })
-
-def simulate_prompt():
-    prompt= "hello!!!"
-
-    llm_response = process_prompt_with_llm(prompt)
-
-    print("Sent response...")
 
 
 # Run the Flask app
