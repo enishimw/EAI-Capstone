@@ -1,0 +1,22 @@
+{
+  "chat_id": "PCD18A01_1639385235",
+  "user_id": "PCD18A01",
+  "procedure_id": 1639385235,
+  "created_at": "2025-02-23T05:20:55.131820",
+  "metadata": {
+    "type": "doctor_lab_request",
+    "patient_history": {}
+  },
+  "messages": [
+    {
+      "type": "HumanMessage",
+      "content": "Order CBC",
+      "timestamp": "2025-02-23T05:21:02.790999"
+    },
+    {
+      "type": "AIMessage",
+      "content": "I've identified the following tests related to your request for a CBC (Complete Blood Count):\n\n1. **FULL BLOOD COUNT (FBC)** - This is likely the main test you're referring to, and it encompasses the complete blood count.\n   - **Children Tests**:\n     - HEMOGLOBIN\n     - HEMATOCRITE\n     - RED BLOOD CELL COUNT\n     - WHITE BLOOD CELL COUNT\n     - PLATELET COUNT (PLAQUETTES)\n     - MCV (Mean Corpuscular Volume)\n     - MCH (Mean Corpuscular Hemoglobin)\n     - MCHC (Mean Corpuscular Hemoglobin Concentration)\n     - RDW-SD\n     - RDW-CV\n     - PDW (Platelet Distribution Width)\n     - MPV (Mean Platelet Volume)\n     - Neutrophil\n     - Lymphocyte\n     - Monocyte\n     - Eosinophil\n     - Basophil\n     - PCT (Plateletcrit)\n     - P_LCR\n\nPlease let me know which specific tests you would like me to order from the list above, or if you'd like to proceed with the complete FULL BLOOD COUNT (FBC). If you have any additional tests in mind, feel free to mention them!",
+      "timestamp": "2025-02-23T05:21:02.791451"
+    }
+  ]
+}

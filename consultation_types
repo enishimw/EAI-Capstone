@@ -1,0 +1,94 @@
+[
+    {
+        "o_id": 1550411704,
+        "locale_name": "New Consultation - Specialist"
+    },
+    {
+        "o_id": 1634177035,
+        "locale_name": "New Consultation - Specialist (weekend/night/holidays)"
+    },
+    {
+        "o_id": 1987953306,
+        "locale_name": "Follow up - Specialist"
+    },
+    {
+        "o_id": 461012845,
+        "locale_name": "Inpatient Visit - Specialist"
+    },
+    {
+        "o_id": 544254460,
+        "locale_name": "New Consultation - General Practitioner"
+    },
+    {
+        "o_id": 894360143,
+        "locale_name": "New Consultation - General Practitioner (weekend/night/holidays)"
+    },
+    {
+        "o_id": 1514894558,
+        "locale_name": "Follow Up - General Practitioner"
+    },
+    {
+        "o_id": 1866572193,
+        "locale_name": "Inpatient Visit - General Practitioner"
+    },
+    {
+        "o_id": 1952436784,
+        "locale_name": "New Consultation - Dentist Surgeon (weekend/night/holidays)"
+    },
+    {
+        "o_id": 424938627,
+        "locale_name": "New Consultation - Dental Technician A0"
+    },
+    {
+        "o_id": 777173266,
+        "locale_name": "New Consultation - Dental Technician A1"
+    },
+    {
+        "o_id": 858319845,
+        "locale_name": "New Consultation - Physiotherapist A0"
+    },
+    {
+        "o_id": 1478820980,
+        "locale_name": "New Consultation - Physiotherapist A1"
+    },
+    {
+        "o_id": 1831057095,
+        "locale_name": "New Consultation - Ophthalmology Technician A0"
+    },
+    {
+        "o_id": 1916396374,
+        "locale_name": "New Consultation - Ophthalmology Technician A1"
+    },
+    {
+        "o_id": 120986681,
+        "locale_name": "New Consultation - Nutritionist A0"
+    },
+    {
+        "o_id": 739004040,
+        "locale_name": "New Consultation - Nutritionist A1"
+    },
+    {
+        "o_id": 822803227,
+        "locale_name": "New Consultation - Psychiatrist"
+    },
+    {
+        "o_id": 1174869482,
+        "locale_name": "New Consultation - Mental Health Technician A0"
+    },
+    {
+        "o_id": 1797080701,
+        "locale_name": "New Consultation - Mental Health Technician A1"
+    },
+    {
+        "o_id": 1880879308,
+        "locale_name": "No consultation"
+    },
+    {
+        "o_id": 84946271,
+        "locale_name": "Results"
+    },
+    {
+        "o_id": 720264750,
+        "locale_name": "Medical certificate"
+    }
+]
