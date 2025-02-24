@@ -1,8 +1,12 @@
 import os
+import json
+from typing import List, Dict
 from openai import OpenAI
 import requests
 from flask import Flask, request, jsonify
 from LabTestAgent import LabTestAgent
+
+auth_token = os.getenv('AUTH_TOKEN')
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -17,9 +21,13 @@ openAiClient = OpenAI(api_key=api_key)
 # Your app's API endpoint
 APP_API_ENDPOINT = 'https://x.clinicplus.pro/api/'
 
+SESSIONS_FOLDER = "sessions"
+os.makedirs(SESSIONS_FOLDER, exist_ok=True)
+
+consultations_path = "consultation_types"
 lab_tests_path = "lab_tests.json"
 
-lab_test_agent = LabTestAgent(api_key=api_key, lab_tests_path=lab_tests_path)
+lab_test_agent = LabTestAgent(api_key=api_key, auth_token=auth_token, consultations_path=consultations_path, lab_tests_path=lab_tests_path)
 
 # Function to call your app's API with a specified HTTP method
 def call_app_api(action, data, method='POST'):
@@ -71,29 +79,72 @@ def determine_action(llm_response):
     else:
         return "read", {"id": 1}, "GET"  # Default to GET for unknown actions
 
+def save_session_to_file(user_id: str, user_type: str, procedure_id: str, operation_id: str, doctor_specializations: List[Dict], patient_history: List[Dict]) -> str:
+    """
+    Save patient_history to a JSON file and return the file path.
+    """
+    # Generate a unique file name
+    filename = f"{user_id}_{procedure_id}_session.json"
+    filepath = os.path.join(SESSIONS_FOLDER, filename)
+
+    session_data = {
+        "user_id": user_id,
+        "user_type": user_type,
+        "procedure_id": procedure_id,
+        "operation_id": operation_id,
+        "doctor_specializations": doctor_specializations,
+        "patient_history": patient_history
+    }
+    
+    # Save patient_history to the file
+    with open(filepath, 'w') as f:
+        json.dump(session_data, f, indent=2)
+    
+    return filepath
+
+@app.route('/initialize-session', methods=['POST'])
+def initialize_session():
+    # Get the data from the request
+    session_data = request.json
+    
+    # Store the data in the session
+    user_id = session_data.get('user_id')
+    user_type = session_data.get('user_type')
+    procedure_id = session_data.get('procedure_id')
+    operation_id = session_data.get('operation_id')
+    patient_history = session_data.get('patient_history', [])
+    doctor_specializations = session_data.get('doctor_specializations', [])
+
+    save_session_to_file(user_id, user_type, procedure_id, operation_id, doctor_specializations, patient_history)
+    
+    # Generate a welcoming message using the LLM
+    welcome_prompt = f"""
+    You are a friendly and helpful medical assistant. A new session has started for user {user_id}. 
+    Please welcome them warmly and let them know you're here to assist with their medical needs.
+    """
+
+    # Use the LLM to generate the welcome message
+    welcome_message = lab_test_agent.llm.invoke(welcome_prompt)
+    
+    # Return the welcome message in the response
+    return jsonify({
+        'status': 'success',
+        'content': welcome_message.content
+    })
+
 # Flask route to handle incoming prompts from your app
 @app.route('/process-prompt', methods=['POST'])
 def process_prompt():
     # Get the prompt from the request
     user_prompt = request.json.get('prompt')
     user_id = request.json.get('user_id')
-    doctor_specializations = request.json.get('doctor_specializations')
-    user_type = request.json.get('user_type')
     procedure_id = request.json.get('procedure_id')
-    patient_history = request.json.get('patient_history', {})
-
-    print("User prompted: ", user_prompt)
-    print("Specializations: ", doctor_specializations)
 
     # Process the prompt with the LabTestAgent
     result = lab_test_agent.process_request(
         type="doctor_lab_request",
-        user_id=user_id,
-        user_type=user_type,
-        doctor_specializations=doctor_specializations,
         prompt=user_prompt,
-        procedure_id=procedure_id,
-        patient_history=patient_history
+        session_filepath=f"sessions/{user_id}_{procedure_id}_session.json"
     )
     
     # Return the result to your app
@@ -102,6 +153,11 @@ def process_prompt():
         'content': result  # Ensure this is a string or JSON-serializable object
     })
 
+@app.route('/clear-session', methods=['POST'])
+def clear_session():
+    # Clear the session data
+    session.clear()
+    return jsonify({'status': 'success', 'message': 'Session cleared'})
 
 # Run the Flask app
 if __name__ == '__main__':
