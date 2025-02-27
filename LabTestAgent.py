@@ -97,22 +97,30 @@ class LabTestAgent:
             Identifies the type of consultation based on the doctor's input.
             Returns the selected consultation type.
             """
-            prompt = f"""I am a medical assistant helping you with lab test orders. Based on your request: "{text}"
+            # Get current date info
+            current_date = datetime.now()
+            is_weekend = current_date.weekday() >= 5  # 5=Saturday, 6=Sunday
+            
+            prompt = f"""Based on the doctor's request: "{text}"
 
-            I'll analyze our available consultation types and suggest matches from our system:
+            Task: Identify the most appropriate consultation type from the available options:
             {json.dumps(self.consultations, indent=2)}
-            -------
-            Let me help identify the specific consultation type you need:
-            1. I'll match your request against our available consultation types considering:
-            - Standard medical terminology and common abbreviations
-            - The current date {datetime.now().strftime("%Y-%m-%d")}, to choose the right variant, if it's in the weekend then the "weekend/holiday" variant is more appropriate
-            - the doctor's specializations
-            - Different naming conventions for the same consultation type
-            2. I'll list the matching consultation types I've found
-            3. Please confirm if this is the consultation type you want to proceed with
-            4. If you need any clarification or have additional consultation types in mind, please let me know
 
-            Which of these consultation types would you like to proceed with?
+            Current date: {current_date.strftime("%Y-%m-%d")}
+            Is weekend/holiday: {"Yes" if is_weekend else "No"}
+
+            Process:
+            1. Extract any mention of consultation type (e.g., "new consultation", "follow-up", etc.)
+            2. Consider the doctor's specializations and match to relevant consultation types
+            3. The consultation type is related uniquely to the doctor's specializations and not on the requested lab test
+            3. If today is a weekend/holiday, prefer consultation types containing "weekend, holiday"
+            4. Identify the most appropriate consultation type ID
+            5. Respond with a short recommendation including the consultation type ID and name
+
+            Example response:
+            "I recommend 'New consultation - General practitioner (weekend, holiday)' (ID: 123) based on your request for a new consultation and because today is a weekend."
+            
+            Remember to be concise but clear.
             """
             response = self.llm.invoke(prompt)
             return response
@@ -122,37 +130,72 @@ class LabTestAgent:
             """
             Identifies requested lab tests using medical knowledge to match against available tests.
             """
-            prompt = f"""I am a medical assistant helping you with lab test orders. Based on your request: "{text}"
+            prompt = f"""Based on the doctor's request: "{text}"
 
-            I'll analyze our available tests and suggest matches from our system:
+            Task: Identify the specific lab tests needed from our system:
             {json.dumps(self.lab_tests, indent=2)}
-            -------
-            Note that some tests are children of others.
 
-            Let me help identify the specific tests you need:
-            1. I'll match your request against our available tests considering:
-               - Standard medical terminology and common abbreviations
-               - Different naming conventions for the same test
-               - Related or complementary tests
-            2. I'll list the matching tests I've found
-            3. Please confirm if these are the tests you want to order
-            4. If you need any clarification or have additional tests in mind, please let me know
+            Process:
+            1. Extract all mentions of specific lab tests or test categories from the request
+            2. Match the doctor's request against available tests considering:
+            - Standard medical terminology and common abbreviations
+            - Parent-child relationships between tests
+            - Complementary tests that are typically ordered together
+            
+            3. For each identified test, include:
+            - Test name
+            - o_id (required for ordering)
+            - Any relevant notes about the test
+            
+            Example response:
+            "I've identified these tests:
+            1. Complete Blood Count (CBC) (o_id: 456)
+            2. Comprehensive Metabolic Panel (o_id: 789)"
 
-            Which of these tests would you like me to order for your patient?
+            Be concise but thorough in your analysis.
             """
             response = self.llm.invoke(prompt)
 
             return response
             
         @tool
-        def analyze_patient_history(history: Dict) -> List[str]:
+        def analyze_patient_history(patient_history: str) -> List[str]:
             """
             Analyzes patient history and suggests additional relevant lab tests.
-            Returns a list of suggested test IDs.
+            Returns a list of suggested tests with o_ids and reasons.
             """
-            # Implement logic to analyze patient history and suggest tests
-            suggested_tests = []
-            return suggested_tests
+            try:
+                # Try to parse the input if it's a string representation of JSON
+                if isinstance(patient_history, str):
+                    patient_history = json.loads(patient_history)
+            except:
+                return "Error: Could not parse patient history data"
+
+            prompt = f"""Analyze this patient history and suggest additional lab tests:
+            {json.dumps(patient_history, indent=2)}
+
+            Available tests:
+            {json.dumps(self.lab_tests, indent=2)}
+
+            Consider:
+            1. Previous diagnoses (e.g., Helicobacter pylori infection)
+            2. Abnormal lab results (e.g., elevated eosinophils)
+            3. Chronic symptoms (e.g., abdominal pain)
+            4. Medication history
+            5. Relevant follow-up tests
+
+            For each suggestion:
+            - Provide the test's official name
+            - Include the o_id from available tests
+            - Give a brief medical justification
+            - Prioritize tests not already in the history
+
+            Format response as:
+            1. [Test Name] (o_id: [ID]) - [Justification]
+            2. [...]"""
+
+            response = self.llm.invoke(prompt).content
+            return response
 
         def submit_lab_request(operation_id: str, user_id:str, test_ids: List[str], consultation_type: str) -> Dict:
             """
@@ -196,11 +239,11 @@ class LabTestAgent:
                 func=identify_lab_tests,
                 description="Identifies requested lab tests using medical knowledge to match against available tests.",
             ),
-            # Tool(
-            #     name="analyze_patient_history",
-            #     func=analyze_patient_history,
-            #     description="Analyzes patient history and suggests additional relevant lab tests.",
-            # ),
+            Tool(
+                name="analyze_patient_history",
+                func=analyze_patient_history,
+                description="Analyzes patient history and suggests additional relevant lab tests.",
+            ),
             StructuredTool.from_function(
                 name="submit_lab_request", 
                 func=submit_lab_request,
@@ -213,40 +256,54 @@ class LabTestAgent:
             (
                 "system", 
                 """
-                    You are a medical assistant helping doctors order lab tests.
-                
+                    You are a friendly and concise medical assistant helping doctors order lab tests. Your goal is to facilitate the lab test ordering process efficiently.
+        
                     Process:
-                    1. When you receive a lab test request:
-                    - First, ask the doctor to specify the consultation type using identify_consultation_type tool
-                    - Extract the consultation_id from the input dictionary to be used later in the submit_lab_request tool
-                    - Present the matches to the doctor for confirmation
-                    - Ask for clarification if needed
+                    1. For each new request:
+                    - Check if the doctor has mentioned both consultation type AND lab tests together
+                    - If only lab tests are mentioned, use identify_consultation_type tool to determine the appropriate consultation type
+                    - If only consultation type is mentioned, ask for which lab tests are needed
+                    - If both are mentioned, use both tools to confirm the correct interpretation
+                    - Analyse the patient history and provide suggestion for additional tests, if applicable
+                    - Present all suggestions clearly and ask for confirmation
 
-                    2. After that:
-                    - Use identify_lab_tests tool to analyze and match the test request
-                    - Present the matches to the doctor for confirmation
-                    - Ask for clarification if needed
+                    2. For consultation type identification:
+                    - Use identify_consultation_type tool 
+                    - Present the suggested consultation type to the doctor clearly
+                    - Confirm before proceeding
                     
-                    2. After receiving confirmation:
-                    - Extract operation_id from the input dictionary
-                    - Create a list of confirmed test_ids. These should be the "o_id" field on the actual test.
-                    - Call submit_lab_request with EXACTLY this format:
-                        submit_lab_request(operation_id="actual_id", user_id="user_id" test_ids=["id1", "id2"], consultation_type="consultation_id")
-                    - Provide confirmation of successful submission
-                    
-                    Important: The submit_lab_request tool requires:
-                    - operation_id (string): Available in the input dictionary
-                    - user_id (string): Available in the input dictionary
-                    - test_ids (list of strings): List of confirmed test IDs
-                    - consultation_type (string): The confirmed consultation type
+                    3. For lab test identification:
+                    - Use identify_lab_tests tool
+                    - Present the matches clearly and ask for confirmation
+                    - Make any adjustments requested by the doctor
 
-                    IMPORTANT: Always submit the lab tests in one go as a list, not as separate requests.
+                    4. For patient history analysis:
+                    - Use analyze_patient_history tool when patient history is available.
+                    - The tool receives the patient_history list present in the input data.
+                    - Compare suggested tests with doctor's requested tests
+                    - Present additional recommendations with justifications
+                    - Ask if doctor wants to add any suggested tests
+                        
+                    5. Once all details are confirmed:
+                    - Extract operation_id and user_id from the input dictionary
+                    - Compile the list of confirmed test_ids (using the "o_id" field)
+                    - Submit the request using submit_lab_request with format:
+                        submit_lab_request(operation_id="actual_id", user_id="user_id", test_ids=["id1", "id2"], consultation_type="consultation_id")
+                    - Confirm successful submission to the doctor
+
+                    6. When finalizing:
+                    - Include both confirmed and approved suggested tests
+                    - Ensure all test IDs are valid o_ids
+                        
+                    Important notes:
+                    - Always handle both consultation type and lab tests even when provided in a single request
+                    - Process both pieces of information in parallel when given together
+                    - Always submit all lab tests in a single request, and you should submit only their corresponding ID value
+                    - The consultation_type to submit should be the ID value, not the display name
+                    - Be concise but thorough in your communications
+                    - If it's a weekend or holiday, recommend the appropriate consultation variant
                     
-                    Always:
-                    - Be clear about which tests you've identified
-                    - Ask for explicit confirmation before submitting
-                    - Handle any clarifications or modifications requested
-                    - Confirm successful submission with the doctor
+                    Remember to be friendly and professional while keeping responses brief and to the point.
                 """
             ),
             MessagesPlaceholder(variable_name="chat_history"),
@@ -311,7 +368,6 @@ class LabTestAgent:
         operation_id = session.get('operation_id')
         doctor_specializations = session.get('doctor_specializations')
         patient_history = session.get('patient_history')
-        
 
         input_data = {
             "input": prompt,
