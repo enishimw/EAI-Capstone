@@ -166,7 +166,6 @@ class LabTestAgent:
             Returns a list of suggested tests with o_ids and reasons.
             """
             patient_history = self.session_context.get('patient_history', {})
-
             # First, check if patient_history is already a dict
             if isinstance(patient_history, dict):
                 # Already parsed, no need to do anything
@@ -231,7 +230,6 @@ class LabTestAgent:
             Returns:
                 Dict with priority_score and justification
             """
-            
             prompt = f"""
             Analyze the doctor's message and lab waiting room status to determine a priority score.
             
@@ -404,7 +402,7 @@ class LabTestAgent:
                     b. Compare suggested tests with confirmed tests in step 2.
                     c. Present additional suggestions/recommendations with justifications
                     d. Ask which ones to include
-
+                    
                     Step 4 - Priority Determination:
                     a. Use determine_request_priority tool
                     b. Pass the doctor's entire conversation history and lab_waiting_room from input data
@@ -506,9 +504,7 @@ class LabTestAgent:
             )
             chat_history = []
         
-        
         operation_id = self.session_context.get('operation_id')
-
         input_data = {
             "input": prompt,
             "operation_id": operation_id,
