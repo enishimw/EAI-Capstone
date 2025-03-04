@@ -24,7 +24,7 @@ APP_API_ENDPOINT = 'https://x.clinicplus.pro/api/'
 SESSIONS_FOLDER = "sessions"
 os.makedirs(SESSIONS_FOLDER, exist_ok=True)
 
-consultations_path = "consultation_types"
+consultations_path = "consultation_types.json"
 lab_tests_path = "lab_tests.json"
 
 lab_test_agent = LabTestAgent(api_key=api_key, auth_token=auth_token, consultations_path=consultations_path, lab_tests_path=lab_tests_path)
@@ -79,7 +79,10 @@ def determine_action(llm_response):
     else:
         return "read", {"id": 1}, "GET"  # Default to GET for unknown actions
 
-def save_session_to_file(user_id: str, user_type: str, procedure_id: str, operation_id: str, doctor_specializations: List[Dict], patient_history: List[Dict]) -> str:
+def save_session_to_file(
+        user_id: str, user_type: str, procedure_id: str, 
+        operation_id: str, doctor_specializations: List[Dict], 
+        patient_history: List[Dict], lab_waiting_room: List[Dict]) -> str:
     """
     Save patient_history to a JSON file and return the file path.
     """
@@ -93,7 +96,8 @@ def save_session_to_file(user_id: str, user_type: str, procedure_id: str, operat
         "procedure_id": procedure_id,
         "operation_id": operation_id,
         "doctor_specializations": doctor_specializations,
-        "patient_history": patient_history
+        "patient_history": patient_history,
+        "lab_waiting_room": lab_waiting_room
     }
     
     # Save patient_history to the file
@@ -114,8 +118,9 @@ def initialize_session():
     operation_id = session_data.get('operation_id')
     patient_history = session_data.get('patient_history', [])
     doctor_specializations = session_data.get('doctor_specializations', [])
+    lab_waiting_room = session_data.get('lab_waiting_room', [])
 
-    save_session_to_file(user_id, user_type, procedure_id, operation_id, doctor_specializations, patient_history)
+    save_session_to_file(user_id, user_type, procedure_id, operation_id, doctor_specializations, patient_history, lab_waiting_room)
     
     # Generate a welcoming message using the LLM
     welcome_prompt = f"""
@@ -142,7 +147,7 @@ def process_prompt():
 
     # Process the prompt with the LabTestAgent
     result = lab_test_agent.process_request(
-        type="doctor_lab_request",
+        chat_type="doctor_lab_request",
         prompt=user_prompt,
         session_filepath=f"sessions/{user_id}_{procedure_id}_session.json"
     )

@@ -14,7 +14,7 @@ class ChatHistoryManager:
         """
         self.storage_path = storage_path
         os.makedirs(storage_path, exist_ok=True)
-        
+
     def _generate_chat_id(self, user_id: str, procedure_id: str) -> str:
         """
         Generate a unique chat ID combining user and procedure IDs.
@@ -82,7 +82,7 @@ class ChatHistoryManager:
         
         with open(filepath, 'w') as f:
             json.dump(chat_data, f, indent=2)
-            
+        
     def get_chat_history(self, chat_id: str) -> List[BaseMessage]:
         """
         Retrieve the chat history for a given chat session.
@@ -110,7 +110,7 @@ class ChatHistoryManager:
                 messages.append(AIMessage(content=msg_data["content"]))
                 
         return messages
-        
+
     def get_chats_by_user(self, user_id: str) -> List[Dict]:
         """
         Get all chat sessions for a specific user.
@@ -133,7 +133,7 @@ class ChatHistoryManager:
                     chat_sessions.append(chat_data)
                     
         return chat_sessions
-        
+    
     def get_chats_by_procedure(self, procedure_id: str) -> List[Dict]:
         """
         Get all chat sessions for a specific procedure.
