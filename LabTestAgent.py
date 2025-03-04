@@ -27,12 +27,23 @@ class LabTestAgent:
         
         # Load and process consultations
         self.consultations = self._load_and_process_consultations(consultations_path)
+<<<<<<< HEAD
 
         # Load and process lab tests
         self.lab_tests = self._load_and_process_tests(lab_tests_path)
         
         self.tools = self._create_tools()
         self.agent = self._create_agent()
+=======
+        # Load and process lab tests
+        self.lab_tests = self._load_and_process_tests(lab_tests_path)
+
+        # Initialize session context to hold global session data
+        self.session_context = None
+        
+        self.tools = None
+        self.agent = None
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
         self.chat_manager = ChatHistoryManager(storage_path=chat_history_path)
     
     def _load_and_process_consultations(self, consultations_path: str) -> Dict:
@@ -101,7 +112,11 @@ class LabTestAgent:
             current_date = datetime.now()
             is_weekend = current_date.weekday() >= 5  # 5=Saturday, 6=Sunday
             
+<<<<<<< HEAD
             prompt = f"""Based on the doctor's specializations: "{json.dumps(self.doctor_specializations, indent=2)}"
+=======
+            prompt = f"""Based on the doctor's specializations: "{json.dumps(self.session_context['doctor_specializations'], indent=2)}"
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
 
             Task: Identify the most appropriate consultation type from the available options:
             {json.dumps(self.consultations, indent=2)}
@@ -158,11 +173,19 @@ class LabTestAgent:
             return response
             
         @tool
+<<<<<<< HEAD
         def analyze_patient_history(patient_history: str) -> List[str]:
+=======
+        def analyze_patient_history() -> List[str]:
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
             """
             Analyzes patient history and suggests additional relevant lab tests.
             Returns a list of suggested tests with o_ids and reasons.
             """
+<<<<<<< HEAD
+=======
+            patient_history = self.session_context.get('patient_history', {})
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
             # First, check if patient_history is already a dict
             if isinstance(patient_history, dict):
                 # Already parsed, no need to do anything
@@ -214,7 +237,12 @@ class LabTestAgent:
             response = self.llm.invoke(prompt).content
             return response
 
+<<<<<<< HEAD
         def determine_request_priority(doctor_intent: str, lab_waiting_room: list) -> Dict:
+=======
+        @tool
+        def determine_request_priority(doctor_intent: str) -> Dict:
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
             """
             Analyzes the doctor's intent and lab waiting room status to determine the priority score.
             The priority score ranges from -100 to 100, with 0 being the default neutral score.
@@ -226,14 +254,21 @@ class LabTestAgent:
             Returns:
                 Dict with priority_score and justification
             """
+<<<<<<< HEAD
             # Check how busy the lab is
             lab_load = len(lab_waiting_room) if lab_waiting_room else 0
             
+=======
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
             prompt = f"""
             Analyze the doctor's message and lab waiting room status to determine a priority score.
             
             Doctor's message: "{doctor_intent}"
+<<<<<<< HEAD
             Current lab load: {lab_load} pending test(s)
+=======
+            Current lab load: "{json.dumps(self.session_context.get('lab_waiting_room', []), indent=2)}"
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
             
             Task: Calculate a priority score from -100 to 100 where:
             - 0 is the default neutral priority
@@ -243,7 +278,11 @@ class LabTestAgent:
             Consider these factors:
             1. Explicit urgency keywords (STAT, urgent, emergency, ASAP, critical, etc.)
             2. Medical conditions suggesting urgency (cardiac symptoms, severe pain, etc.)
+<<<<<<< HEAD
             3. Current lab load ({lab_load} pending tests)
+=======
+            3. Current lab load
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
             4. Time-sensitivity of tests requested
             5. Contextual clues about patient condition
             
@@ -353,7 +392,11 @@ class LabTestAgent:
                 func=analyze_patient_history,
                 description="THIRD STEP: Analyzes patient history and suggests additional relevant lab tests. Use only after lab test confirmation and if patient history exists.",
             ),
+<<<<<<< HEAD
             StructuredTool.from_function(
+=======
+            Tool(
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
                 name="determine_request_priority",
                 func=determine_request_priority,
                 description="FOURTH STEP: Determines the priority score for the lab request based on doctor's intent and lab waiting room status. Use after tests are confirmed.",
@@ -401,7 +444,11 @@ class LabTestAgent:
                     b. Compare suggested tests with confirmed tests in step 2.
                     c. Present additional suggestions/recommendations with justifications
                     d. Ask which ones to include
+<<<<<<< HEAD
 
+=======
+                    
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
                     Step 4 - Priority Determination:
                     a. Use determine_request_priority tool
                     b. Pass the doctor's entire conversation history and lab_waiting_room from input data
@@ -454,9 +501,23 @@ class LabTestAgent:
         agent_executor = AgentExecutor(agent=agent, tools=self.tools, verbose=True)
         
         return agent_executor
+<<<<<<< HEAD
         
     def process_request(self,
                         type: str, 
+=======
+    
+    def set_session_context(self, session_data: Dict):
+        """Set the global session context for all tools to access"""
+        self.session_context = session_data
+        
+        # Create tools and agent after session context is set
+        self.tools = self._create_tools()
+        self.agent = self._create_agent()
+    
+    def process_request(self,
+                        chat_type: str, 
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
                         prompt: str,
                         session_filepath: str) -> Dict:
         """
@@ -470,11 +531,23 @@ class LabTestAgent:
         Returns:
             Dict: Agent's response
         """
+<<<<<<< HEAD
         if session_filepath and os.path.exists(session_filepath):
             session = self.load_session_from_file(session_filepath)
         
         user_id = session.get('user_id')
         procedure_id = session.get('procedure_id')
+=======
+        # Load the session data and set the global context
+        if session_filepath and os.path.exists(session_filepath):
+            session = self.load_session_from_file(session_filepath)
+            self.set_session_context(session)
+        else:
+            return "Error: Session data not found"
+        
+        user_id = self.session_context.get('user_id')
+        procedure_id = self.session_context.get('procedure_id')
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
 
         try:
             chat_id = f"{user_id}_{procedure_id}"
@@ -482,7 +555,11 @@ class LabTestAgent:
         except ValueError:
             # Create new chat session if it doesn't exist
             metadata = {
+<<<<<<< HEAD
                 "type": type,
+=======
+                "type": chat_type,
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
             }
             chat_id = self.chat_manager.create_chat_session(
                 user_id=user_id,
@@ -491,6 +568,7 @@ class LabTestAgent:
             )
             chat_history = []
         
+<<<<<<< HEAD
         
         operation_id = session.get('operation_id')
         self.doctor_specializations = session.get('doctor_specializations')
@@ -504,6 +582,13 @@ class LabTestAgent:
             "doctor_specializations": self.doctor_specializations,
             "patient_history": patient_history,
             "lab_waiting_room": lab_waiting_room
+=======
+        operation_id = self.session_context.get('operation_id')
+        input_data = {
+            "input": prompt,
+            "operation_id": operation_id,
+            "user_id": user_id
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
         }
         
         result = self.agent.invoke({

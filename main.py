@@ -147,7 +147,11 @@ def process_prompt():
 
     # Process the prompt with the LabTestAgent
     result = lab_test_agent.process_request(
+<<<<<<< HEAD
         type="doctor_lab_request",
+=======
+        chat_type="doctor_lab_request",
+>>>>>>> 524e92b85689dd94833b94f0e40d44ff78735b30
         prompt=user_prompt,
         session_filepath=f"sessions/{user_id}_{procedure_id}_session.json"
     )
