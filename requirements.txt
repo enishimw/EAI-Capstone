@@ -1,0 +1,8 @@
+Flask==3.0.3
+gunicorn==23.0.0
+Werkzeug==3.0.3
+openai==1.61.1
+requests==2.32.3
+langchain-core<1.0.0,>=0.3.35
+langchain-core<1.0.0,>=0.3.39
+openai<2.0.0,>=1.58.1
