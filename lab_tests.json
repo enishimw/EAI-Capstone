@@ -1,5 +1,6 @@
 [
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1550411704,
         "locale_name": "FULL BLOOD COUNT (FBC)",
@@ -64,66 +65,77 @@
         ]
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1634177035,
         "locale_name": "BLEEDING TIME",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1987953306,
         "locale_name": "CLOTING TIME",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 461012845,
         "locale_name": "BLOOD GROUP",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 544254460,
         "locale_name": "SEDIMENTATION RATE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 894360143,
         "locale_name": "PROTHROMBIN TIME",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1514894558,
         "locale_name": "T.H (Total Hemoglobin)",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1866572193,
-        "locale_name": "TCK\/PARTIAL TROMBOPLASTIN TIME",
+        "locale_name": "TCK/PARTIAL TROMBOPLASTIN TIME",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1952436784,
         "locale_name": "FIBRINOGEN",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 424938627,
         "locale_name": "CD4 COUNT",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 777173266,
         "locale_name": "THROMBIN TIME",
         "children": []
     },
     {
+        "unit_of_measure": "mg/dl",
         "normal_values": [
             {
                 "min": "75",
@@ -136,6 +148,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mg/dl",
         "normal_values": [
             {
                 "min": "10",
@@ -148,6 +161,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mg/dl",
         "normal_values": [
             {
                 "min": "0.5",
@@ -160,6 +174,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mg/dl",
         "normal_values": [
             {
                 "min": "2.4",
@@ -172,6 +187,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mg/dl",
         "normal_values": [
             {
                 "min": null,
@@ -184,18 +200,21 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 739004040,
         "locale_name": "TOTAL BILIRUBIN",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 822803227,
         "locale_name": "DIRECT BILIRUBIN",
         "children": []
     },
     {
+        "unit_of_measure": "ui/l",
         "normal_values": [
             {
                 "min": "0",
@@ -208,6 +227,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "ui/l",
         "normal_values": [
             {
                 "min": "0",
@@ -220,6 +240,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "ui/l",
         "normal_values": [
             {
                 "min": "10",
@@ -237,6 +258,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mmol/l",
         "normal_values": [
             {
                 "min": "1.09",
@@ -249,18 +271,21 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 720264750,
         "locale_name": "MAGNESIUM",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1071941809,
         "locale_name": "ALBUMIN",
         "children": []
     },
     {
+        "unit_of_measure": "mmol/l",
         "normal_values": [
             {
                 "min": "96.0",
@@ -273,12 +298,14 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1778341779,
         "locale_name": "TOTAL PROTEIN",
         "children": []
     },
     {
+        "unit_of_measure": "ui/l",
         "normal_values": [
             {
                 "min": "220",
@@ -291,6 +318,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "ui/l",
         "normal_values": [
             {
                 "min": "25",
@@ -303,6 +331,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "ui/l",
         "normal_values": [
             {
                 "min": "100",
@@ -315,6 +344,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mmol/l",
         "normal_values": [
             {
                 "min": "135.0",
@@ -327,6 +357,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mmol/l",
         "normal_values": [
             {
                 "min": "3.5",
@@ -339,6 +370,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mmol/l",
         "normal_values": [
             {
                 "min": "1.09",
@@ -351,6 +383,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mg/dl",
         "normal_values": [
             {
                 "min": "-",
@@ -363,6 +396,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mg/dl",
         "normal_values": [
             {
                 "min": "50",
@@ -375,6 +409,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mg/dl",
         "normal_values": [
             {
                 "min": "130",
@@ -387,12 +422,14 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1000384845,
         "locale_name": "LIPASE",
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "4",
@@ -405,288 +442,336 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1438348463,
         "locale_name": "CA15-3",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 2058461502,
-        "locale_name": "URINE\/SEDIMENT",
+        "locale_name": "URINE/SEDIMENT",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 261084033,
         "locale_name": "URINARY CHEMISTRY",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 344198160,
         "locale_name": "GRAM STAINING",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 964869859,
         "locale_name": "UROCULTURE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1318644594,
         "locale_name": "ALBUMINURIA",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1402275269,
         "locale_name": "GLUCOSURIA",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 2022946388,
-        "locale_name": "CSF (CEREBRAL SPINAL FLUID)\/DIRECT",
+        "locale_name": "CSF (CEREBRAL SPINAL FLUID)/DIRECT",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 208266023,
-        "locale_name": "PUNCTION FLUID\/DIRECT",
+        "locale_name": "PUNCTION FLUID/DIRECT",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 291904950,
         "locale_name": "COPROCULTURE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 645680665,
         "locale_name": "HEMOCULTURE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1266350312,
         "locale_name": "CSF (CEREBRAL SPINAL FLUID) CULTURE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1349981563,
         "locale_name": "BODY FUID PUNCTION CULTURE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1699563466,
         "locale_name": "ANTIBIOGRAM",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 172748893,
-        "locale_name": "VAGINAL\/URETHRAL SWAB",
+        "locale_name": "VAGINAL/URETHRAL SWAB",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 524299564,
-        "locale_name": "STOOL \/DIRECT EXAM",
+        "locale_name": "STOOL /DIRECT EXAM",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 610164671,
         "locale_name": "GE (BLOOD SMEAL)",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1230276622,
         "locale_name": "STOOL ANALYSIS",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1582381713,
         "locale_name": "THICK BLOOD SMEAR",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1664046944,
         "locale_name": "TPHA",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 136675827,
         "locale_name": "RPR",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 488780354,
         "locale_name": "WIDAL",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 574123221,
-        "locale_name": "HELICOBACTER PYLORI\/ BLOOD",
+        "locale_name": "HELICOBACTER PYLORI/ BLOOD",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 926325156,
-        "locale_name": "HELICOBACTER PYLORI\/ STOOL",
+        "locale_name": "HELICOBACTER PYLORI/ STOOL",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1544342071,
         "locale_name": "MNI RAPID TEST",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1628005510,
         "locale_name": "ASLO",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1980207465,
         "locale_name": "ARTHRI TEST",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 454935544,
         "locale_name": "CRP TEST",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 538606667,
         "locale_name": "TOXO IGG",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 890285786,
         "locale_name": "TOXO IGM",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1525603245,
         "locale_name": "ROSE BENGALE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1877701692,
         "locale_name": "RUBEOLE IGG",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1960945295,
         "locale_name": "RUBEOLE IGM",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 436196126,
         "locale_name": "CHLAMIDIA TRACHOMATIS",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 787746273,
         "locale_name": "PREGNANCY TEST",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 871546480,
         "locale_name": "SPERMOGRAMME",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1489561795,
         "locale_name": "EIA AG HBS",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1841628498,
         "locale_name": "EIA AC HBS",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1925428773,
         "locale_name": "EIA AC HCV",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 131719348,
-        "locale_name": "AG CRYPTO\/CSF (CEREBRAL SPINAL FLUID)",
+        "locale_name": "AG CRYPTO/CSF (CEREBRAL SPINAL FLUID)",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 752229639,
         "locale_name": "HIV RAIPID TEST",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 833376150,
         "locale_name": "FOBIN STOOL",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1185609849,
         "locale_name": "CA 125",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1806117576,
         "locale_name": "AGHBE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1891452763,
         "locale_name": "AB HBE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 96202794,
         "locale_name": "CMV IGG",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 716186301,
         "locale_name": "CMV IGM",
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "34.0",
@@ -699,6 +784,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "10^3/mm3",
         "normal_values": [
             {
                 "min": "150",
@@ -711,6 +797,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "10^6/mm3",
         "normal_values": [
             {
                 "min": "4.50",
@@ -723,156 +810,182 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 2124371185,
         "locale_name": "EMMEL TEST",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 60129600,
         "locale_name": "RETICULOCYTES",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 680670163,
         "locale_name": "HB ELECTROPHORESIS",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1013476514,
         "locale_name": "MYELOGRAM",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1097242933,
         "locale_name": "FERRITINE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1451019140,
         "locale_name": "SERUM IRON",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 2071553047,
         "locale_name": "PHOSPHORE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 7837414,
         "locale_name": "TIBC",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 357417801,
         "locale_name": "SEDEROPHILIN",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 977960408,
         "locale_name": "CPK",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1329639083,
         "locale_name": "PROTEIN ELECTROPHORESIS",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1415502650,
         "locale_name": "BLOOD GAZ",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 2036037005,
         "locale_name": "GLYCOSE CHALLENGE TEST",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 240231964,
         "locale_name": "TRIGLYCERIDES LEVELS",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 321900783,
-        "locale_name": "CREATININ KINASE\u2013MB",
+        "locale_name": "CREATININ KINASE-MB",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 941886846,
         "locale_name": "CSF SPECIAL STAINING",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1294122945,
         "locale_name": "SPUTUM SPECIAL STAINING",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1379461200,
         "locale_name": "SPUTUM CULTURE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1731527971,
         "locale_name": "FLUID CULTURE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 204715954,
         "locale_name": "SPECIAL CULTURE MEDIA",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 285859845,
         "locale_name": "OTHER CULTURES",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 637932180,
         "locale_name": "WRIGHT",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1260146535,
         "locale_name": "WAALER ROSE",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1343945206,
         "locale_name": "PBD",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1696016985,
         "locale_name": "ASDOR",
         "children": []
     },
     {
+        "unit_of_measure": "miu/l",
         "normal_values": [
             {
                 "min": "0.27",
@@ -885,6 +998,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "nmol/l",
         "normal_values": [
             {
                 "min": "1.30",
@@ -897,6 +1011,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "nmol/l",
         "normal_values": [
             {
                 "min": "59.00",
@@ -909,18 +1024,21 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1241406621,
         "locale_name": "TT3",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1593084268,
         "locale_name": "TT4",
         "children": []
     },
     {
+        "unit_of_measure": "pg/ml",
         "normal_values": [
             {
                 "min": "",
@@ -953,6 +1071,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "ng/ml",
         "normal_values": [
             {
                 "min": "0.25",
@@ -985,6 +1104,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "ng/ml",
         "normal_values": [
             {
                 "min": "0",
@@ -997,18 +1117,21 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 583152544,
         "locale_name": "TPSA",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 936930355,
         "locale_name": "FPSA",
         "children": []
     },
     {
+        "unit_of_measure": "mui/ml",
         "normal_values": [
             {
                 "min": "2.12",
@@ -1036,6 +1159,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "mui/ml",
         "normal_values": [
             {
                 "min": "1.5",
@@ -1063,12 +1187,14 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1990813156,
         "locale_name": "CORTISOL",
         "children": []
     },
     {
+        "unit_of_measure": "ng/ml",
         "normal_values": [
             {
                 "min": "2.48",
@@ -1096,12 +1222,14 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 549306566,
-        "locale_name": "HORMONAL DOSAGE\/PER HORMONE",
+        "locale_name": "HORMONAL DOSAGE/PER HORMONE",
         "children": []
     },
     {
+        "unit_of_measure": "10^3/mm3",
         "normal_values": [
             {
                 "min": "3.40",
@@ -1114,6 +1242,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "g/dl",
         "normal_values": [
             {
                 "min": "11.0",
@@ -1126,6 +1255,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "fL",
         "normal_values": [
             {
                 "min": "76.0",
@@ -1138,6 +1268,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "pg",
         "normal_values": [
             {
                 "min": "23",
@@ -1150,6 +1281,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "g/dl",
         "normal_values": [
             {
                 "min": "32.0",
@@ -1162,6 +1294,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "fL",
         "normal_values": [
             {
                 "min": "37.0",
@@ -1174,6 +1307,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "11.5",
@@ -1186,6 +1320,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "fL",
         "normal_values": [
             {
                 "min": "9.0",
@@ -1198,6 +1333,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "fL",
         "normal_values": [
             {
                 "min": "9.0",
@@ -1210,6 +1346,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "13.0",
@@ -1222,6 +1359,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "0.17",
@@ -1234,6 +1372,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "30.0",
@@ -1246,6 +1385,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "29.0",
@@ -1258,6 +1398,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "2.0",
@@ -1270,6 +1411,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "1.0",
@@ -1282,6 +1424,7 @@
         "children": []
     },
     {
+        "unit_of_measure": "%",
         "normal_values": [
             {
                 "min": "0.0",
@@ -1294,78 +1437,91 @@
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 73221305,
         "locale_name": "TOXO IGM",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 693891336,
         "locale_name": "TOXO IGG",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1045439387,
         "locale_name": "HEPATITE EIA HB",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1127111786,
         "locale_name": "HEPATITE  EIA HCV",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1747226365,
         "locale_name": "ketonuria",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 2099329868,
         "locale_name": "urea",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 37705183,
         "locale_name": "glycemia",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 389383854,
         "locale_name": "serowidal",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1009922865,
         "locale_name": "cl-",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1443274259,
         "locale_name": "GLYCEMIA (P)",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 2065484002,
         "locale_name": "NFS(P)",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 1664373,
         "locale_name": "SEROLOGIE H. PYLORI",
         "children": []
     },
     {
+        "unit_of_measure": null,
         "normal_values": [],
         "o_id": 353867716,
         "locale_name": "hemoglobine glyque",
