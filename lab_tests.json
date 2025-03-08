@@ -716,16 +716,6 @@
                 "min": "4.50",
                 "max": "11.50",
                 "locale_name": null
-            },
-            {
-                "min": "2.5",
-                "max": "10.5",
-                "locale_name": null
-            },
-            {
-                "min": "1.5",
-                "max": "9.5",
-                "locale_name": null
             }
         ],
         "o_id": 1770076782,
