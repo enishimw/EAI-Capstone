@@ -5,6 +5,7 @@ from openai import OpenAI
 import requests
 from flask import Flask, request, jsonify
 from LabTestAgent import LabTestAgent
+from LabResultAnalysisAgent import LabResultAnalysisAgent
 
 auth_token = os.getenv('AUTH_TOKEN')
 
@@ -28,6 +29,7 @@ consultations_path = "consultation_types.json"
 lab_tests_path = "lab_tests.json"
 
 lab_test_agent = LabTestAgent(api_key=api_key, auth_token=auth_token, consultations_path=consultations_path, lab_tests_path=lab_tests_path)
+lab_result_agent = LabResultAnalysisAgent(api_key=api_key, lab_tests_path=lab_tests_path)
 
 # Function to call your app's API with a specified HTTP method
 def call_app_api(action, data, method='POST'):
@@ -49,36 +51,6 @@ def call_app_api(action, data, method='POST'):
     # Return the API response
     return response.json()
 
-    response = openAiClient.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a friendly and helpful medical assistant in the Clinic Plus Pro system. Think of yourself as that knowledgeable, approachable colleague who makes the workday better - professional but also warm and engaging. You use natural, conversational language and can throw in the occasional light-hearted comment when appropriate (though always maintaining professionalism around serious medical matters).\n\nYour personality:\n- Friendly and approachable - you're the helpful colleague everyone loves working with\n- Clear and direct, but never robotic or formal\n- Quick to understand context and match others' communication styles\n- Good at reading the room - knows when to be light and when to be serious\n- Proactive about asking questions and making helpful suggestions\n- Humble and happy to learn from the medical professionals you work with\n\nYour main duties:\n\n1. Helping with Test Requests\n- Chat naturally with doctors about what tests they need\n- Ask follow-up questions conversationally if you need more info\n- Look through patient history and suggest other relevant tests\n- Keep lab techs in the loop with clear, prioritized tasks\n- Always double-check you've got everything right before moving forward\n\n2. Making Sense of Results\n- Break down lab results in clear, natural language\n- Point out anything that needs attention\n- Explain what results might mean, while deferring to the doctor's expertise\n- Answer questions and brainstorm next steps together\n- Adapt your style to who you're talking to (doctors vs lab techs)\n\n3. Handling Critical Stuff\n- Keep an eye out for concerning values\n- Give context-aware heads up about potential issues\n- Help get the right people involved quickly when needed\n- Make sure urgent messages don't get lost\n- Follow up to ensure critical info was received\n\nYour approach:\n- Have natural conversations rather than formal exchanges\n- Use clear medical terms but explain things in plain language too\n- Ask questions like a curious colleague would\n- Be proactive about offering helpful insights\n- Know when to defer to human expertise\n- Keep things light when appropriate, but always professional\n- Double-check the important stuff\n- Speak up if something seems unclear or concerning\n\nRemember: You're here to make everyone's job easier while keeping patient care top priority. Be helpful and friendly, but always thoughtful and thorough when it comes to medical matters. Think of yourself as that reliable colleague who makes work both easier and more enjoyable."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
-    )
-
-    return response.choices[0].message
-
-# Function to determine the action based on the LLM's response
-def determine_action(llm_response):
-    # Example logic to determine action and HTTP method
-    if "create" in llm_response.lower():
-        return "create", {"data": "example data"}, "POST"
-    elif "update" in llm_response.lower():
-        return "update", {"id": 1, "data": "updated data"}, "PUT"
-    elif "delete" in llm_response.lower():
-        return "delete", {"id": 1}, "DELETE"
-    elif "fetch" in llm_response.lower() or "read" in llm_response.lower():
-        return "read", {"id": 1}, "GET"
-    else:
-        return "read", {"id": 1}, "GET"  # Default to GET for unknown actions
-
 def save_session_to_file(
         user_id: str, user_type: str, procedure_id: str, 
         operation_id: str, doctor_specializations: List[Dict], 
@@ -87,6 +59,7 @@ def save_session_to_file(
     Save patient_history to a JSON file and return the file path.
     """
     # Generate a unique file name
+    user_id = user_id.replace('_', '-')
     filename = f"{user_id}_{procedure_id}_session.json"
     filepath = os.path.join(SESSIONS_FOLDER, filename)
 
@@ -101,6 +74,32 @@ def save_session_to_file(
     }
     
     # Save patient_history to the file
+    with open(filepath, 'w') as f:
+        json.dump(session_data, f, indent=2)
+    
+    return filepath
+
+def save_lab_session_to_file(
+        user_id: str, user_type: str, procedure_id: str, 
+        operation_id: str, patient_info: Dict = None) -> str:
+    """
+    Save lab session data to a JSON file and return the file path.
+    """
+    user_id = user_id.replace('_', '-')
+    # Generate a unique file name
+    filename = f"{user_id}_{procedure_id}_lab_session.json"
+    filepath = os.path.join(SESSIONS_FOLDER, filename)
+
+    session_data = {
+        "user_id": user_id,
+        "user_type": user_type,
+        "procedure_id": procedure_id,
+        "operation_id": operation_id,
+        "patient_info": patient_info or {},
+        "results": {}
+    }
+    
+    # Save session data to the file
     with open(filepath, 'w') as f:
         json.dump(session_data, f, indent=2)
     
@@ -137,13 +136,46 @@ def initialize_session():
         'content': welcome_message.content
     })
 
+@app.route('/initialize-lab-session', methods=['POST'])
+def initialize_lab_session():
+    """Initialize a session for a lab technician"""
+    # Get the data from the request
+    session_data = request.json
+    
+    # Store the data in the session
+    user_id = session_data.get('user_id')
+    user_type = session_data.get('user_type')
+    procedure_id = session_data.get('procedure_id')
+    operation_id = session_data.get('operation_id')
+    patient_info = session_data.get('patient_info', {})
+
+    # Save session data
+    filepath = save_lab_session_to_file(user_id, user_type, procedure_id, operation_id, patient_info)
+    
+    # Generate a welcoming message for the lab technician
+    welcome_prompt = f"""
+    You are a knowledgeable laboratory assistant. A new lab session has started for user {user_id}. 
+    Please welcome them warmly and let them know you're here to help analyze and interpret lab test results.
+    """
+
+    # Use the LLM to generate the welcome message
+    welcome_message = lab_result_agent.llm.invoke(welcome_prompt)
+    
+    # Return the welcome message in the response
+    return jsonify({
+        'status': 'success',
+        'content': welcome_message.content,
+        'session_path': filepath
+    })
+
 # Flask route to handle incoming prompts from your app
 @app.route('/process-prompt', methods=['POST'])
 def process_prompt():
     # Get the prompt from the request
     user_prompt = request.json.get('prompt')
-    user_id = request.json.get('user_id')
+    user_id = request.json.get('user_id').replace('_', '-')
     procedure_id = request.json.get('procedure_id')
+    
 
     # Process the prompt with the LabTestAgent
     result = lab_test_agent.process_request(
@@ -159,11 +191,118 @@ def process_prompt():
         'content': result  # Ensure this is a string or JSON-serializable object
     })
 
-@app.route('/clear-session', methods=['POST'])
-def clear_session():
-    # Clear the session data
-    session.clear()
-    return jsonify({'status': 'success', 'message': 'Session cleared'})
+@app.route('/process-lab-prompt', methods=['POST'])
+def process_lab_prompt():
+    """Handle general prompts/questions from lab technicians"""
+    # Get the prompt from the request
+    user_prompt = request.json.get('prompt')
+    user_id = request.json.get('user_id').replace('_', '-')
+    procedure_id = request.json.get('procedure_id')
+
+    # Process the prompt with the LabResultAnalysisAgent
+    result = lab_result_agent.process_request(
+        chat_type="lab_result_analysis",
+        prompt=user_prompt,
+        session_filepath=f"sessions/{user_id}_{procedure_id}_lab_session.json"
+    )
+    
+    # Return the result to your app
+    return jsonify({
+        'status': 'success',
+        'content': result
+    })
+
+@app.route('/process-lab-result', methods=['POST'])
+def process_lab_result():
+    """Handle individual lab test results as they're entered"""
+    # Get the test data from the request
+    test_id = request.json.get('test_id')
+    result_value = request.json.get('result_value')
+    user_id = request.json.get('user_id').replace('_', '-')
+    procedure_id = request.json.get('procedure_id')
+    
+    # Process the result with the LabResultAnalysisAgent
+    analysis = lab_result_agent.process_result(
+        test_id=test_id,
+        result_value=result_value,
+        session_filepath=f"sessions/{user_id}_{procedure_id}_lab_session.json"
+    )
+    
+    # Return the analysis to your app
+    return jsonify({
+        'status': 'success',
+        'content': analysis
+    })
+
+@app.route('/get-comprehensive-analysis', methods=['POST'])
+def get_comprehensive_analysis():
+    """Get a comprehensive analysis of all current test results"""
+    # Get the request data
+    user_id = request.json.get('user_id').replace('_', '-')
+    procedure_id = request.json.get('procedure_id')
+    lab_tests_with_results = request.json.get('results')
+
+    session_filepath = f"sessions/{user_id}_{procedure_id}_lab_session.json"
+    # Load the current session data
+    with open(session_filepath, 'r') as f:
+        session_data = json.load(f)
+
+    session_data['results'] = lab_tests_with_results
+    # Save the updated session data back to the file
+    with open(session_filepath, 'w') as f:
+        json.dump(session_data, f, indent=2)
+    
+    prompt = """
+        Please use the get_comprehensive_analysis tool to provide a comprehensive analysis of all current test results.
+        
+        Lab test results format information:
+        - Each test has an o_id (unique identifier), locale_name (display name), the actual result, and unit_of_measure
+        - The result field contains:
+            - ready (boolean): true if the test is completed
+            - status (integer): 0 = not done, 1 = standby, 2 = ready/completed
+            - value (for simple tests): the actual test result value
+            - option (i.e positive/negative): This is for tests where the result is chosen from a set of options
+            - children (for complex tests like CBC): an array of sub-tests, each with their own results
+        
+        - Only analyze results with status = 2 (ready) and ready = true
+        - For tests with children (like CBC), check each child test's result.ready and result.status values
+        
+        Please identify abnormal values (outside reference ranges), potential patterns, and clinical significance.
+        Organize your analysis by test category and highlight critical values.
+    """
+
+    # Use the LabResultAnalysisAgent to get comprehensive analysis
+    result = lab_result_agent.process_request(
+        chat_type="lab_result_analysis",
+        prompt=prompt,
+        session_filepath=f"sessions/{user_id}_{procedure_id}_lab_session.json"
+    )
+    
+    # Return the analysis to your app
+    return jsonify({
+        'status': 'success',
+        'content': result
+    })
+
+@app.route('/identify-critical-values', methods=['POST'])
+def identify_critical_values():
+    """Identify only the critical values that require immediate attention"""
+    # Get the request data
+    user_id = request.json.get('user_id').replace('_', '-')
+    procedure_id = request.json.get('procedure_id')
+    
+    # Use the LabResultAnalysisAgent to identify critical values
+    result = lab_result_agent.process_request(
+        chat_type="lab_result_analysis",
+        prompt="Please identify any critical values in the current test results that require immediate attention.",
+        session_filepath=f"sessions/{user_id}_{procedure_id}_lab_session.json"
+    )
+    
+    # Return the analysis to your app
+    return jsonify({
+        'status': 'success',
+        'content': result
+    })
 
 # Run the Flask app
 if __name__ == '__main__':

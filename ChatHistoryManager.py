@@ -19,6 +19,7 @@ class ChatHistoryManager:
         """
         Generate a unique chat ID combining user and procedure IDs.
         """
+        user_id = user_id.replace('_', '-')
         return f"{user_id}_{procedure_id}"
         
     def _get_chat_filepath(self, chat_id: str) -> str:
