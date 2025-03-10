@@ -59,7 +59,6 @@ def save_session_to_file(
     Save patient_history to a JSON file and return the file path.
     """
     # Generate a unique file name
-    user_id = user_id.replace('_', '-')
     filename = f"{user_id}_{procedure_id}_session.json"
     filepath = os.path.join(SESSIONS_FOLDER, filename)
 
@@ -85,7 +84,6 @@ def save_lab_session_to_file(
     """
     Save lab session data to a JSON file and return the file path.
     """
-    user_id = user_id.replace('_', '-')
     # Generate a unique file name
     filename = f"{user_id}_{procedure_id}_lab_session.json"
     filepath = os.path.join(SESSIONS_FOLDER, filename)
@@ -173,7 +171,7 @@ def initialize_lab_session():
 def process_prompt():
     # Get the prompt from the request
     user_prompt = request.json.get('prompt')
-    user_id = request.json.get('user_id').replace('_', '-')
+    user_id = request.json.get('user_id')
     procedure_id = request.json.get('procedure_id')
     
 
@@ -195,7 +193,7 @@ def process_lab_prompt():
     """Handle general prompts/questions from lab technicians"""
     # Get the prompt from the request
     user_prompt = request.json.get('prompt')
-    user_id = request.json.get('user_id').replace('_', '-')
+    user_id = request.json.get('user_id')
     procedure_id = request.json.get('procedure_id')
 
     # Process the prompt with the LabResultAnalysisAgent
@@ -217,7 +215,7 @@ def process_lab_result():
     # Get the test data from the request
     test_id = request.json.get('test_id')
     result_value = request.json.get('result_value')
-    user_id = request.json.get('user_id').replace('_', '-')
+    user_id = request.json.get('user_id')
     procedure_id = request.json.get('procedure_id')
     
     # Process the result with the LabResultAnalysisAgent
@@ -237,7 +235,7 @@ def process_lab_result():
 def get_comprehensive_analysis():
     """Get a comprehensive analysis of all current test results"""
     # Get the request data
-    user_id = request.json.get('user_id').replace('_', '-')
+    user_id = request.json.get('user_id')
     procedure_id = request.json.get('procedure_id')
     lab_tests_with_results = request.json.get('results')
 
@@ -250,6 +248,8 @@ def get_comprehensive_analysis():
     # Save the updated session data back to the file
     with open(session_filepath, 'w') as f:
         json.dump(session_data, f, indent=2)
+
+    lab_result_agent.set_session_context(session_data)
     
     prompt = """
         Please use the get_comprehensive_analysis tool to provide a comprehensive analysis of all current test results.
@@ -287,7 +287,7 @@ def get_comprehensive_analysis():
 def identify_critical_values():
     """Identify only the critical values that require immediate attention"""
     # Get the request data
-    user_id = request.json.get('user_id').replace('_', '-')
+    user_id = request.json.get('user_id')
     procedure_id = request.json.get('procedure_id')
     
     # Use the LabResultAnalysisAgent to identify critical values
