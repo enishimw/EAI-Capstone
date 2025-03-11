@@ -487,7 +487,6 @@ class LabTestAgent:
             return "Error: Session data not found"
         
         user_id = self.session_context.get('user_id')
-        user_id = user_id.replace('_', '-')
         procedure_id = self.session_context.get('procedure_id')
 
         try:

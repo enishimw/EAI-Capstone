@@ -378,33 +378,32 @@ class LabResultAnalysisAgent:
             return "Error: Session data not found"
         
         # Extract user_id and procedure_id for chat history
-        filename = os.path.basename(session_filepath)
-        file_parts = os.path.splitext(filename)[0].split('_')
+        user_id = self.session_context.get('user_id')
+        procedure_id = self.session_context.get('procedure_id')
         
-        if len(file_parts) >= 2:
-            user_id = file_parts[0]
-            procedure_id = file_parts[1]
-            
-            try:
-                chat_id = f"{user_id}_{procedure_id}"
-                chat_history = self.chat_manager.get_chat_history(chat_id)
-            except ValueError:
-                # Create new chat session if it doesn't exist
-                metadata = {
-                    "type": chat_type,
-                }
-                chat_id = self.chat_manager.create_chat_session(
-                    user_id=user_id,
-                    procedure_id=procedure_id,
-                    metadata=metadata
-                )
-                chat_history = []
-        else:
+        try:
+            chat_id = f"{user_id}_{procedure_id}"
+            chat_history = self.chat_manager.get_chat_history(chat_id)
+        except ValueError:
+            # Create new chat session if it doesn't exist
+            metadata = {
+                "type": chat_type,
+            }
+            chat_id = self.chat_manager.create_chat_session(
+                user_id=user_id,
+                procedure_id=procedure_id,
+                metadata=metadata
+            )
             chat_history = []
+        
+        input_data = {
+            "input": prompt,
+            "results": self.session_context.get('results'),
+        }
         
         # Get result from the agent
         result = self.agent.invoke({
-            "input": prompt,
+            "input": input_data,
             "chat_history": chat_history
         })
         
