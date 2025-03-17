@@ -385,6 +385,7 @@ class LabTestAgent:
                     Step 1 - Consultation Type:
                     a. Use identify_consultation_type tool to get consultation suggestions.
                     b. If the user's intent at this step is not to make a consultation, politely tell them to first start with choosing the consultation type
+                    if it is just greeting or common querry great them  back and ask them how you can help them. 
                     c. Present suggestion clearly. Make it stand out.
                     d. Present matches with respective ids
                     e. Ask for explicit confirmation
@@ -397,11 +398,15 @@ class LabTestAgent:
                     d. Ask for confirmation/modifications
                     e. Repeat until approved
 
-                    Step 3 - Patient History Analysis (if available):
-                    a. Use analyze_patient_history tool after lab tests are confirmed. The tool receives the patient_history list present in the input data.
-                    b. Compare suggested tests with confirmed tests in step 2.
-                    c. Present additional suggestions/recommendations with justifications
-                    d. Ask which ones to include
+                    Step 3 - Patient History Analysis:
+                    
+                    a. check if the user have patient history and if a user doesn't have the history notify the user that there is no patient history
+                    and if there history proceed with the next steps.
+                    b. Use analyze_patient_history tool after lab tests are confirmed. The tool receives the patient_history list present in the input data.
+                    c. Compare suggested tests with confirmed tests in step 2.
+                    d. Present additional suggestions/recommendations with justifications
+                    e. Ask which ones to include
+                
                     
                     Step 4 - Priority Determination:
                     a. Use determine_request_priority tool
@@ -430,6 +435,10 @@ class LabTestAgent:
                     - The consultation_type to submit should be the ID value, not the display name
                     - Be concise but thorough in your communications
                     - Priority scores range from -100 to 100, where 0 is neutral
+
+                    MOST IMPORTANT: please allow users to enter all information at once and process them without asking them again if a user provide the consultation, the test priority
+                    deal with them and keep that in your memory just ask for the confirmation only and other information which are required but not provided users. 
+
                     
                     Remember to be friendly and professional while keeping responses brief and to the point.
                 """
