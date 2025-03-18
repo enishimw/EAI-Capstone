@@ -4,8 +4,10 @@ from typing import List, Dict
 from openai import OpenAI
 import requests
 from flask import Flask, request, jsonify
+from ChatHistoryManager import ChatHistoryManager
 from LabTestAgent import LabTestAgent
 from LabResultAnalysisAgent import LabResultAnalysisAgent
+from langchain_core.messages import AIMessage
 
 auth_token = os.getenv('AUTH_TOKEN')
 
@@ -27,8 +29,18 @@ os.makedirs(SESSIONS_FOLDER, exist_ok=True)
 
 consultations_path = "consultation_types.json"
 lab_tests_path = "lab_tests.json"
+chat_history_path = "chat_histories/"
+physicians_path = "physicians.json"
 
-lab_test_agent = LabTestAgent(api_key=api_key, auth_token=auth_token, consultations_path=consultations_path, lab_tests_path=lab_tests_path)
+chat_manager = ChatHistoryManager(storage_path=chat_history_path)
+lab_test_agent = LabTestAgent(
+        api_key=api_key,
+        auth_token=auth_token,
+        consultations_path=consultations_path,
+        physicians_path=physicians_path,
+        lab_tests_path=lab_tests_path,
+        chat_history_path=chat_history_path
+    )
 lab_result_agent = LabResultAnalysisAgent(api_key=api_key, lab_tests_path=lab_tests_path)
 
 # Function to call your app's API with a specified HTTP method
@@ -118,20 +130,57 @@ def initialize_session():
     lab_waiting_room = session_data.get('lab_waiting_room', [])
 
     save_session_to_file(user_id, user_type, procedure_id, operation_id, doctor_specializations, patient_history, lab_waiting_room)
-    
-    # Generate a welcoming message using the LLM
-    welcome_prompt = f"""
-    You are a friendly and helpful medical assistant. A new session has started for user {user_id}. 
-    Please welcome them warmly and let them know you're here to assist with their medical needs.
-    """
 
-    # Use the LLM to generate the welcome message
-    welcome_message = lab_test_agent.llm.invoke(welcome_prompt)
+    try:
+        chat_id = f"{user_id}_{procedure_id}"
+        chat_history = chat_manager.get_chat_history(chat_id)
+    except ValueError:
+        # Create new chat session if it doesn't exist
+        metadata = {
+            "type": "doctor_lab_request",
+        }
+        chat_id = chat_manager.create_chat_session(
+            user_id=user_id,
+            procedure_id=procedure_id,
+            metadata=metadata
+        )
+
+        # Generate a welcoming message using the LLM
+        welcome_prompt = f"""
+        You are a friendly and helpful medical assistant. A new session has started for user {user_id}. 
+        Please welcome them warmly and let them know you're here to assist with their medical needs.
+        """
+
+        # Use the LLM to generate the welcome message
+        welcome_message = lab_test_agent.llm.invoke(welcome_prompt)
+    
+        chat_manager.add_message(
+            chat_id=chat_id,
+            message=AIMessage(content=welcome_message.content)
+        )
+    
+        chat_history = chat_manager.get_chat_history(chat_id)
+    
+    # Format the chat history for the front-end
+    formatted_chat_history = []
+    for msg in chat_history:
+        if isinstance(msg, AIMessage):
+            formatted_chat_history.append({
+                "type": msg.type,
+                "content": msg.content,
+                "timestamp": msg.timestamp,
+            })
+        else:
+            formatted_chat_history.append({
+                "type": msg.type,
+                "content": msg.content,
+                "timestamp": msg.timestamp,
+            })
     
     # Return the welcome message in the response
     return jsonify({
         'status': 'success',
-        'content': welcome_message.content
+        'content': formatted_chat_history
     })
 
 @app.route('/initialize-lab-session', methods=['POST'])
@@ -148,22 +197,58 @@ def initialize_lab_session():
     patient_info = session_data.get('patient_info', {})
 
     # Save session data
-    filepath = save_lab_session_to_file(user_id, user_type, procedure_id, operation_id, patient_info)
-    
-    # Generate a welcoming message for the lab technician
-    welcome_prompt = f"""
-    You are a knowledgeable laboratory assistant. A new lab session has started for user {user_id}. 
-    Please welcome them warmly and let them know you're here to help analyze and interpret lab test results.
-    """
+    save_lab_session_to_file(user_id, user_type, procedure_id, operation_id, patient_info)
 
-    # Use the LLM to generate the welcome message
-    welcome_message = lab_result_agent.llm.invoke(welcome_prompt)
+    try:
+        chat_id = f"{user_id}_{procedure_id}"
+        chat_history = chat_manager.get_chat_history(chat_id)
+    except ValueError:
+        # Create new chat session if it doesn't exist
+        metadata = {
+            "type": "doctor_lab_request",
+        }
+        chat_id = chat_manager.create_chat_session(
+            user_id=user_id,
+            procedure_id=procedure_id,
+            metadata=metadata
+        )
+    
+        # Generate a welcoming message for the lab technician
+        welcome_prompt = f"""
+        You are a knowledgeable laboratory assistant. A new lab session has started for user {user_id}. 
+        Please welcome them warmly and let them know you're here to help analyze and interpret lab test results.
+        """
+
+        # Use the LLM to generate the welcome message
+        welcome_message = lab_result_agent.llm.invoke(welcome_prompt)
+
+        chat_manager.add_message(
+            chat_id=chat_id,
+            message=AIMessage(content=welcome_message.content)
+        )
+    
+        chat_history = chat_manager.get_chat_history(chat_id)
+    
+    # Format the chat history for the front-end
+    formatted_chat_history = []
+    for msg in chat_history:
+        if isinstance(msg, AIMessage):
+            formatted_chat_history.append({
+                "type": msg.type,
+                "content": msg.content,
+                "timestamp": msg.timestamp,
+            })
+        else:
+            formatted_chat_history.append({
+                "type": msg.type,
+                "content": msg.content,
+                "timestamp": msg.timestamp,
+            })
     
     # Return the welcome message in the response
     return jsonify({
         'status': 'success',
-        'content': welcome_message.content,
-        'session_path': filepath
+        'content': formatted_chat_history
     })
 
 # Flask route to handle incoming prompts from your app
@@ -185,7 +270,7 @@ def process_prompt():
     # Return the result to your app
     return jsonify({
         'status': 'success',
-        'content': result  # Ensure this is a string or JSON-serializable object
+        'content': result
     })
 
 @app.route('/process-lab-prompt', methods=['POST'])
@@ -213,23 +298,80 @@ def process_lab_prompt():
 def process_lab_result():
     """Handle individual lab test results as they're entered"""
     # Get the test data from the request
-    test_id = request.json.get('test_id')
-    result_value = request.json.get('result_value')
+    lab_test_result = request.json.get('lab_test_result')
     user_id = request.json.get('user_id')
     procedure_id = request.json.get('procedure_id')
+
+    prompt = f"""
+    Please use the analyze_result tool to provide analysis for this lab test result:
+    
+    {json.dumps(lab_test_result, indent=2)}
+    
+    I need:
+    1. A numerical score indicating if the value is above, below, or within the normal range:
+       - 1: dangerously above normal range
+       - 0.5: acceptably above normal range
+       - 0: within normal range or not applicable
+       - -0.5: acceptably below normal range
+       - -1: dangerously below normal range
+    2. A one-phrase insight/description of the result
+    3. A detailed analysis including clinical significance
+    
+    Please analyze this result in the context of the patient's information.
+
+    The response should be a valid JSON object with the fields: abnormality_score, insight, and analysis.
+    Please provide your analysis in the following JSON format:
+    {{
+        "abnormality_score": <number>,
+        "insight": <string>,
+        "analysis": <string>
+    }}
+    """
     
     # Process the result with the LabResultAnalysisAgent
     analysis = lab_result_agent.process_result(
-        test_id=test_id,
-        result_value=result_value,
+        chat_type="lab_result_analysis",
+        prompt=prompt,
+        lab_test_result=lab_test_result,
         session_filepath=f"sessions/{user_id}_{procedure_id}_lab_session.json"
     )
-    
-    # Return the analysis to your app
-    return jsonify({
-        'status': 'success',
-        'content': analysis
-    })
+
+    # Try to parse the response as JSON
+    try:
+        # First, try to parse the whole response as JSON
+        analysis_json = json.loads(analysis)
+        
+        # Return the JSON response
+        return jsonify({
+            'status': 'success',
+            'content': analysis_json
+        })
+    except json.JSONDecodeError:
+        # If that fails, try to extract JSON from the text (in case it's wrapped in explanatory text)
+        import re
+        json_pattern = r'```json\s*(.*?)\s*```'
+        match = re.search(json_pattern, analysis, re.DOTALL)
+        
+        if match:
+            try:
+                json_str = match.group(1)
+                analysis_json = json.loads(json_str)
+                return jsonify({
+                    'status': 'success',
+                    'content': analysis_json
+                })
+            except json.JSONDecodeError:
+                pass
+                
+        # If all else fails, return the text as is
+        return jsonify({
+            'status': 'success',
+            'content': {
+                'abnormality_score': 0,
+                'insight': 'Error parsing result',
+                'analysis': analysis
+            }
+        })
 
 @app.route('/get-comprehensive-analysis', methods=['POST'])
 def get_comprehensive_analysis():
@@ -283,24 +425,63 @@ def get_comprehensive_analysis():
         'content': result
     })
 
-@app.route('/identify-critical-values', methods=['POST'])
-def identify_critical_values():
-    """Identify only the critical values that require immediate attention"""
+@app.route('/submit-final-report', methods=['POST'])
+def submit_final_report():
+    """Generate final report and store it in the doctor's chat session"""
+    print("request", request.json)
     # Get the request data
-    user_id = request.json.get('user_id')
+    lab_tech_comment = request.json.get('lab_tech_comment')
+    user_id = request.json.get('user_id')  # Lab technician's user ID
     procedure_id = request.json.get('procedure_id')
+    doctor_id = request.json.get('doctor_id')  # ID of the doctor who requested the tests
     
-    # Use the LabResultAnalysisAgent to identify critical values
-    result = lab_result_agent.process_request(
-        chat_type="lab_result_analysis",
-        prompt="Please identify any critical values in the current test results that require immediate attention.",
-        session_filepath=f"sessions/{user_id}_{procedure_id}_lab_session.json"
-    )
+    # Load the lab session
+    session_filepath = f"sessions/{user_id}_{procedure_id}_lab_session.json"
     
-    # Return the analysis to your app
+    if not os.path.exists(session_filepath):
+        return jsonify({
+            'status': 'error',
+            'message': 'Lab session data not found'
+        }), 404
+    
+    # Load the current session data
+    with open(session_filepath, 'r') as f:
+        session_data = json.load(f)
+    
+    # Set the session context for the agent
+    lab_result_agent.set_session_context(session_data)
+    
+    # Generate the final report using the saved analysis and lab tech comments
+    final_report = lab_result_agent.generate_final_report(lab_tech_comment)
+    
+    # Store the report in the doctor's chat session
+    doctor_chat_id = f"{doctor_id}_{procedure_id}"
+    
+    try:
+        # Try to add to existing chat
+        chat_manager.add_message(
+            chat_id=doctor_chat_id,
+            message=AIMessage(content=f"## Lab Results Report\n\n{final_report}")
+        )
+    except ValueError:
+        # If chat doesn't exist, create a new one
+        chat_manager.create_chat_session(
+            user_id=doctor_id,
+            procedure_id=procedure_id,
+            metadata={
+                "type": "doctor_lab_request"
+            }
+        )
+        chat_manager.add_message(
+            chat_id=doctor_chat_id,
+            message=AIMessage(content=f"## Lab Results Report\n\n{final_report}")
+        )
+    
+    # Return success response
     return jsonify({
         'status': 'success',
-        'content': result
+        'message': 'Final report generated and stored in doctor\'s chat',
+        'report': final_report
     })
 
 # Run the Flask app

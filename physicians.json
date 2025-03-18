@@ -1,0 +1,378 @@
+[
+    {
+        "sn": "PCD18A12",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A23",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A26",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            },
+            {
+                "o_id": 1987953306,
+                "locale_name": "Surgery"
+            },
+            {
+                "o_id": 461012845,
+                "locale_name": "Internal Medicine"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A34",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD20A00",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD20A02",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            },
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD20A03",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD20A04",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD21A00",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD22A01",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD22A09",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD23A08",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            },
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A32",
+        "specializations": [
+            {
+                "o_id": 1987953306,
+                "locale_name": "Surgery"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A41",
+        "specializations": [
+            {
+                "o_id": 1987953306,
+                "locale_name": "Surgery"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A42",
+        "specializations": [
+            {
+                "o_id": 1987953306,
+                "locale_name": "Surgery"
+            }
+        ]
+    },
+    {
+        "sn": "PCD22A00",
+        "specializations": [
+            {
+                "o_id": 461012845,
+                "locale_name": "Internal Medicine"
+            }
+        ]
+    },
+    {
+        "sn": "PCD25A00",
+        "specializations": [
+            {
+                "o_id": 461012845,
+                "locale_name": "Internal Medicine"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A01",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A02",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A09",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A22",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A36",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD19A01",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD20A05",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD22A02",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD22A03",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD23A05",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD23A06",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD23A07",
+        "specializations": [
+            {
+                "o_id": 894360143,
+                "locale_name": "Gynecology and Obstetrics"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A35",
+        "specializations": [
+            {
+                "o_id": 1514894558,
+                "locale_name": "Physiotherapy"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A21",
+        "specializations": [
+            {
+                "o_id": 1866572193,
+                "locale_name": "Ophthalmology"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A14",
+        "specializations": [
+            {
+                "o_id": 1952436784,
+                "locale_name": "Stomatology"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A08",
+        "specializations": [
+            {
+                "o_id": 424938627,
+                "locale_name": "Dentistry"
+            }
+        ]
+    },
+    {
+        "sn": "PCD18A17",
+        "specializations": [
+            {
+                "o_id": 424938627,
+                "locale_name": "Dentistry"
+            }
+        ]
+    },
+    {
+        "sn": "PCD19A00",
+        "specializations": [
+            {
+                "o_id": 424938627,
+                "locale_name": "Dentistry"
+            }
+        ]
+    },
+    {
+        "sn": "PCD21A02",
+        "specializations": [
+            {
+                "o_id": 424938627,
+                "locale_name": "Dentistry"
+            }
+        ]
+    },
+    {
+        "sn": "PCD21A07",
+        "specializations": [
+            {
+                "o_id": 424938627,
+                "locale_name": "Dentistry"
+            }
+        ]
+    },
+    {
+        "sn": "PCD21A08",
+        "specializations": [
+            {
+                "o_id": 424938627,
+                "locale_name": "Dentistry"
+            }
+        ]
+    },
+    {
+        "sn": "PCD22A07",
+        "specializations": [
+            {
+                "o_id": 424938627,
+                "locale_name": "Dentistry"
+            }
+        ]
+    },
+    {
+        "sn": "PCD24A03",
+        "specializations": [
+            {
+                "o_id": 822803227,
+                "locale_name": "Endocrinologist"
+            }
+        ]
+    }
+]

@@ -105,9 +105,9 @@ class ChatHistoryManager:
         messages = []
         for msg_data in chat_data["messages"]:
             if msg_data["type"] == "HumanMessage":
-                messages.append(HumanMessage(content=msg_data["content"]))
+                messages.append(HumanMessage(content=msg_data["content"], timestamp=msg_data["timestamp"]))
             elif msg_data["type"] == "AIMessage":
-                messages.append(AIMessage(content=msg_data["content"]))
+                messages.append(AIMessage(content=msg_data["content"], timestamp=msg_data["timestamp"]))
                 
         return messages
 
