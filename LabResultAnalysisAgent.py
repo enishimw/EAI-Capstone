@@ -170,12 +170,9 @@ class LabResultAnalysisAgent:
             
             # Prepare the test results with test names for better context
             named_results = {}
-            for test_id, value in results.items():
-                test_id_int = int(test_id) if test_id.isdigit() else test_id
-                test = self.lab_tests.get(test_id_int, {})
-                test_name = test.get('locale_name', f"Unknown test ({test_id})")
-                named_results[test_name] = value
-            
+            for result in results:
+                if result.get('result').get('ready'):
+                    named_results[result.get('locale_name')] = result.get('result').get('value')
             prompt = f"""
             Review these lab test results and identify ONLY critical values that require immediate clinical attention:
             
@@ -225,7 +222,7 @@ class LabResultAnalysisAgent:
                 
                 When a lab technician enters a new result:
                
-                1. use identify_critical_values tool to highlist whether the result is critical, abnormal or normal
+                1. use identify_critical_values tool to highlight whether the result is critical, abnormal or normal
                 2. Use the analyze_result tool to evaluate the individual result
                 3. Provide context and clinical significance
                 
