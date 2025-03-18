@@ -1,3 +1,4 @@
+
 import os
 import ast
 import json
@@ -269,18 +270,15 @@ class LabResultAnalysisAgent:
             Identifies only the critical values that require immediate attention.
             
             Returns:
-                List of critical values and recommended immediate actions
+                A string indicating whether a certain test is critical or not
             """
             results = self.session_context.get('results', {})
             
             # Prepare the test results with test names for better context
             named_results = {}
-            for test_id, value in results.items():
-                test_id_int = int(test_id) if test_id.isdigit() else test_id
-                test = self.lab_tests.get(test_id_int, {})
-                test_name = test.get('locale_name', f"Unknown test ({test_id})")
-                named_results[test_name] = value
-            
+            for result in results:
+                if result.get('result').get('ready'):
+                    named_results[result.get('locale_name')] = result.get('result').get('value')
             prompt = f"""
             Review these lab test results and identify ONLY critical values that require immediate clinical attention:
             
@@ -377,8 +375,9 @@ class LabResultAnalysisAgent:
                 Your goal is to identify abnormal values, critical results, and patterns that require attention.
                 
                 When a lab technician enters a new result:
-                1. Use the analyze_result tool to evaluate the individual result
-                2. Highlight if the result is normal, abnormal, or critical
+               
+                1. use identify_critical_values tool to highlight whether the result is critical, abnormal or normal
+                2. Use the analyze_result tool to evaluate the individual result
                 3. Provide context and clinical significance
                 
                 When reviewing multiple results:
