@@ -1,4 +1,5 @@
 import os
+import ast
 import json
 import requests
 from typing import List, Dict, Any, Union, Optional
@@ -87,6 +88,9 @@ class LabResultAnalysisAgent:
             
             # Get the current session results to provide context
             patient_info = self.session_context.get('patient_info', {})
+
+            # Convert the string to a dictionary
+            lab_test_result = json.loads(lab_test_result.replace("'", '"'))
 
             # Extract test information
             test_id = None
