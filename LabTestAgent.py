@@ -15,7 +15,7 @@ from datetime import datetime
 from ChatHistoryManager import ChatHistoryManager
 
 class LabTestAgent:
-    def __init__(self, api_key: str, auth_token: str, consultations_path: str, lab_tests_path: str, chat_history_path: str = "chat_histories/"):
+    def __init__(self, api_key: str, auth_token: str, consultations_path: str, physicians_path: str, lab_tests_path: str, chat_history_path: str = "chat_histories/"):
         self.llm = ChatOpenAI(
             openai_api_key=api_key,
             model="gpt-4o"
@@ -29,6 +29,8 @@ class LabTestAgent:
         self.consultations = self._load_and_process_consultations(consultations_path)
         # Load and process lab tests
         self.lab_tests = self._load_and_process_tests(lab_tests_path)
+        # Load and process physicians and their specializations
+        self.physicians = self._load_and_process_physicians(physicians_path)
 
         # Initialize session context to hold global session data
         self.session_context = None
@@ -85,6 +87,41 @@ class LabTestAgent:
         
         return lab_tests
     
+    def _load_and_process_physicians(self, physicians_path: str) -> Dict:
+        """
+        Load physicians data and create a vector store for semantic search.
+        
+        Args:
+            physicians_path (str): Path to the physicians JSON file
+            
+        Returns:
+            Dict: Dictionary of loaded physician data
+        """
+        # Load physicians data from JSON file
+        with open(physicians_path, 'r') as f:
+            physicians = json.load(f)
+        
+        # Prepare documents for vector store
+        texts = []
+        metadatas = []
+        
+        for physician in physicians:
+            # Combine all specializations into a single text for better semantic matching
+            specialization_texts = [spec['locale_name'] for spec in physician['specializations']]
+            combined_text = f"Physician {physician['sn']} specializing in: {', '.join(specialization_texts)}"
+            
+            texts.append(combined_text)
+            metadatas.append({'sn': physician['sn'], 'specializations': [spec['o_id'] for spec in physician['specializations']]})
+        
+        # Create vector store for physicians
+        self.physician_vector_store = FAISS.from_texts(
+            texts=texts,
+            embedding=self.embeddings,
+            metadatas=metadatas
+        )
+        
+        return physicians
+
     def load_session_from_file(self, filepath: str) -> Dict:
         """
         Load user_procedure session from a JSON file.
@@ -295,7 +332,6 @@ class LabTestAgent:
             
             return result
 
-        # Now update the submit_lab_request tool to include the priority score
         def submit_lab_request(operation_id: str, user_id: str, test_ids: List[str], consultation_type: str, priority_score: int = 0) -> Dict:
             """
             Submits the finalized lab test request to the external API with priority score.
@@ -337,6 +373,198 @@ class LabTestAgent:
             data = json.loads(response.text)
 
             return {"success": data["success"], "operation_id": data["operation"]["id"]}
+        
+        def escalate_procedure(procedure_id: str, doctor_id: str) -> Dict:
+            """
+            Submits a request to escalate a procedure to another doctor/specialist.
+            
+            Args:
+                procedure_id: The ID of the procedure to escalate
+                doctor_id: The ID of the doctor/specialist to escalate to
+                
+            Returns:
+                Dict with success status and response information
+            """
+            api_endpoint = "https://x.clinicplus.pro/api/llm/procedure/escalate"
+            
+            # Prepare the payload
+            payload = {
+                "procedure": procedure_id,
+                "doctor": doctor_id
+            }
+            
+            # Prepare the headers
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json",
+            }
+            
+            try:
+                # Make the API request
+                response = requests.post(
+                    api_endpoint,
+                    json=payload,
+                    headers=headers
+                )
+                print(response.text)
+                
+                # Parse the response
+                data = json.loads(response.text)
+
+                # Get the current doctor's ID from the session context
+                current_doctor_id = self.session_context.get('user_id')
+
+                # Check if the escalation was successful
+                if data.get("success", False):
+                    operation_id = data.get("operation", {}).get("id")
+                    
+                    # Now handle post-escalation tasks
+                    # 1. Load doctor A's session data
+                    doctor_a_session_filepath = f"sessions/{current_doctor_id}_{procedure_id}_session.json"
+                    
+                    if not os.path.exists(doctor_a_session_filepath):
+                        return {
+                            "success": True,
+                            "operation_id": operation_id,
+                            "post_escalation": {
+                                "success": False,
+                                "message": f"Doctor A's session data not found at {doctor_a_session_filepath}"
+                            }
+                        }
+                        
+                    with open(doctor_a_session_filepath, 'r') as f:
+                        doctor_a_session = json.load(f)
+                    
+                    # 2. Get doctor B's specializations
+                    doctor_b_specializations = []
+                    for physician in self.physicians:
+                        if physician['sn'] == doctor_id:
+                            doctor_b_specializations = physician['specializations']
+                            break
+                    
+                    # 3. Create a new session file for doctor B
+                    doctor_b_session = {
+                        "user_id": doctor_id,
+                        "user_type": "doctor",  # Assuming both are doctors
+                        "procedure_id": procedure_id,
+                        "operation_id": operation_id,
+                        "doctor_specializations": doctor_b_specializations,
+                        "patient_history": doctor_a_session.get("patient_history", []),
+                        "lab_waiting_room": doctor_a_session.get("lab_waiting_room", []),
+                        "escalated_from": {
+                            "doctor_id": current_doctor_id,
+                        }
+                    }
+                    
+                    # Save doctor B's session
+                    doctor_b_session_filepath = f"sessions/{doctor_id}_{procedure_id}_session.json"
+                    with open(doctor_b_session_filepath, 'w') as f:
+                        json.dump(doctor_b_session, f, indent=2)
+                    
+                    # 4. Generate a comprehensive report for doctor B
+                    # Get doctor A's specialization names for the report
+                    doctor_a_specialization_names = []
+                    for spec in doctor_a_session.get("doctor_specializations", []):
+                        doctor_a_specialization_names.append(spec.get("locale_name", "Unknown specialization"))
+                    
+                    # Get doctor B's specialization names for the report
+                    doctor_b_specialization_names = []
+                    for spec in doctor_b_specializations:
+                        doctor_b_specialization_names.append(spec.get("locale_name", "Unknown specialization"))
+                    
+                    # Format patient history for the report
+                    patient_history = doctor_a_session.get("patient_history", [])
+                    
+                    # Generate the report using LLM
+                    report_prompt = f"""
+                    You are preparing a detailed medical report for a specialist doctor who is receiving an escalated procedure.
+                    
+                    Escalation Details:
+                    - Procedure ID: {procedure_id}
+                    - Referring Doctor: {current_doctor_id} (Specializations: {', '.join(doctor_a_specialization_names)})
+                    - Receiving Specialist: {doctor_id} (Specializations: {', '.join(doctor_b_specialization_names)})
+                    
+                    Patient History:
+                    {json.dumps(patient_history, indent=2)}
+                    
+                    Please create a comprehensive handover report that includes:
+                    1. A professional greeting and introduction
+                    2. Brief summary of the patient's case and why it was escalated
+                    3. Key medical findings and observations from the referring doctor
+                    4. Relevant patient history details
+                    5. Any lab results or tests already performed
+                    6. Specific areas of concern that require the specialist's expertise
+                    7. Any urgent considerations or time-sensitive issues
+                    
+                    Format the report professionally with clear sections and emphasis on critical information.
+                    """
+                    
+                    report_response = self.llm.invoke(report_prompt)
+                    escalation_report = report_response.content
+                    
+                    # 5. Create or use existing chat session for doctor B
+                    doctor_b_chat_id = f"{doctor_id}_{procedure_id}"
+                    
+                    try:
+                        # Try to get existing chat history
+                        self.chat_manager.get_chat_history(doctor_b_chat_id)
+                    except ValueError:
+                        # Create new chat session if it doesn't exist
+                        metadata = {
+                            "type": "doctor_lab_request",
+                            "escalated_from": current_doctor_id
+                        }
+                        self.chat_manager.create_chat_session(
+                            user_id=doctor_id,
+                            procedure_id=procedure_id,
+                            metadata=metadata
+                        )
+                        
+                        # Generate a welcome message for doctor B
+                        welcome_prompt = f"""
+                        You are a helpful medical assistant. Doctor {doctor_id} has received a case escalated from Doctor {current_doctor_id}.
+                        Please generate a brief welcome message informing them of the escalation and that you're ready to assist.
+                        Keep it professional and concise.
+                        """
+                        
+                        welcome_message = self.llm.invoke(welcome_prompt)
+                        
+                        # Add welcome message to chat
+                        self.chat_manager.add_message(
+                            chat_id=doctor_b_chat_id,
+                            message=AIMessage(content=welcome_message.content)
+                        )
+                    
+                    # 6. Add the escalation report to doctor B's chat
+                    self.chat_manager.add_message(
+                        chat_id=doctor_b_chat_id,
+                        message=AIMessage(content=f"## Escalation Report\n\n{escalation_report}")
+                    )
+                    
+                    # Return combined results
+                    return {
+                        "success": True,
+                        "operation_id": operation_id,
+                        "post_escalation": {
+                            "success": True,
+                            "message": "Successfully created session and report for specialist doctor",
+                            "report": "Report generated and added to specialist's chat session"
+                        }
+                    }
+                else:
+                    # Return the API response if escalation failed
+                    return {
+                        "success": data.get("success", False),
+                        "message": data.get("message", "Unknown error occurred during escalation"),
+                        "operation_id": None
+                    }
+            except Exception as e:
+                # Handle any exceptions
+                return {
+                    "success": False,
+                    "message": f"Error during escalation: {str(e)}",
+                    "operation_id": None
+                }
 
         return [
             Tool(
@@ -363,82 +591,127 @@ class LabTestAgent:
                 name="submit_lab_request", 
                 func=submit_lab_request,
                 description="FINAL STEP: Submits the finalized lab test request to the external API. Use only after all previous steps are confirmed.",
+            ),
+            StructuredTool.from_function(
+                name="escalate_procedure",
+                func=escalate_procedure,
+                description="Escalates the current procedure to a specialist doctor. Use only when the doctor confirms they want to escalate based on lab results or recommendations."
             )
         ]
         
     def _create_agent(self):
+        # Pre-process the physicians JSON to escape curly braces
+        physicians_json = json.dumps(self.physicians, indent=2)
+        physicians_json = physicians_json.replace("{", "{{").replace("}", "}}")
+
         prompt = ChatPromptTemplate.from_messages([
             (
                 "system", 
-                """
+
+                f"""
                     You are a friendly and concise medical assistant helping doctors order lab tests. Your goal is to facilitate the lab test ordering process efficiently.
                     This happens in distinct steps. Follow this strict sequence:
 
                     Workflow Sequence:
-                    1. Consultation Type Identification → 2. Lab Test Matching → 3. Patient History Analysis → 4. Submission
+                        1. Consultation Type Identification → 2. Lab Test Matching → 3. Patient History Analysis → 4. Submission
+                    
+                    Escalation Workflow:
+                        Physicians list:
+                        {physicians_json}
+
+                        Proactive Recommendation:
+                            1. Review lab reports in chat history for potential specialist needs
+                            2. If certain values or patterns suggest specialist care, proactively recommend escalation
+                            3. Suggest appropriate specialists based on the medical findings
+                        
+                        If the doctor mentions or confirms escalation:
+                            1. Verify the doctor's intent to escalate
+                            2. If doctor mentions a specialty (e.g., "cardiologist", "endocrinologist"):
+                                - Look up physicians with that specialization
+                                - Suggest 1-3 appropriate physicians with their SN codes
+                            3. If doctor approves a specific physician, use the escalate_procedure tool with their SN
+                            4. Provide confirmation when complete
 
                     Current Step Detection:
-                    1. Check chat history to determine which steps are complete
-                    2. Proceed to next required step
+                        1. Check chat history to determine which steps are complete
+                        2. Proceed to next required step
         
                     Process:
                     Step 1 - Consultation Type:
-                    a. Use identify_consultation_type tool to get consultation suggestions.
-                    b. If the user's intent at this step is not to make a consultation, politely tell them to first start with choosing the consultation type
-                    if it is just greeting or common querry great them  back and ask them how you can help them. 
-                    c. Present suggestion clearly. Make it stand out.
-                    d. Present matches with respective ids
-                    e. Ask for explicit confirmation
-                    f. Repeat until approved
+                        a. Use identify_consultation_type tool to get consultation suggestions.
+                        b. If the user's intent at this step is not to make a consultation, politely tell them to first start with choosing the consultation type
+                        c. Present suggestion clearly. Make it stand out.
+                        d. Present matches with respective ids
+                        e. Ask for explicit confirmation
+                        f. Repeat until approved
 
                     Step 2 - Lab Test Identification:
-                    a. Use identify_lab_tests tool if consultation type is confirmed
-                    b. You should provide the identify_lab_tests tool with the doctor's desire of lab tests to perform.
-                    c. Present matches with o_ids
-                    d. Ask for confirmation/modifications
-                    e. Repeat until approved
+                        a. Use identify_lab_tests tool if consultation type is confirmed
+                        b. You should provide the identify_lab_tests tool with the doctor's desire of lab tests to perform.
+                        c. Present matches with o_ids
+                        d. Ask for confirmation/modifications
+                        e. Repeat until approved
 
-                    Step 3 - Patient History Analysis:
-                    
-                    a. check if the user have patient history and if a user doesn't have the history notify the user that there is no patient history
-                    and if there history proceed with the next steps.
-                    b. Use analyze_patient_history tool after lab tests are confirmed. The tool receives the patient_history list present in the input data.
-                    c. Compare suggested tests with confirmed tests in step 2.
-                    d. Present additional suggestions/recommendations with justifications
-                    e. Ask which ones to include
-                
+                    Step 3 - Patient History Analysis (if available):
+                        a. Use analyze_patient_history tool after lab tests are confirmed. The tool receives the patient_history list present in the input data.
+                        b. Compare suggested tests with confirmed tests in step 2.
+                        c. Present additional suggestions/recommendations with justifications
+                        d. Ask which ones to include
                     
                     Step 4 - Priority Determination:
-                    a. Use determine_request_priority tool
-                    b. Pass the doctor's entire conversation history and lab_waiting_room from input data
-                    c. Present the determined priority score and justification
-                    d. Ask for confirmation or adjustment
-                    e. Explain priority scale (-100 to 100 where 0 is neutral, positive is higher priority, negative is lower)
+                        a. Use determine_request_priority tool
+                        b. Pass the doctor's entire conversation history and lab_waiting_room from input data
+                        c. Present the determined priority score and justification
+                        d. Ask for confirmation or adjustment
+                        e. Explain priority scale (-100 to 100 where 0 is neutral, positive is higher priority, negative is lower)
 
                     Final Step - Submission (Use this step only when all previous steps are confirmed):
-                    a. Extract operation_id and user_id from the input dictionary
-                    b. Compile the list of confirmed test_ids (using the "o_id" field)
-                    c. Use submit_lab_request tool with format:
-                        submit_lab_request(operation_id="actual_id", user_id="user_id", test_ids=["id1", "id2", ...], consultation_type="consultation_id")
-                    e. Show success/failure message. If successful, make a report of the whole procedure from step 1 to final step. 
+                        a. Extract operation_id and user_id from the input dictionary
+                        b. Compile the list of confirmed test_ids (using the "o_id" field)
+                        c. Use submit_lab_request tool with format:
+                            submit_lab_request(operation_id="actual_id", user_id="user_id", test_ids=["id1", "id2", ...], consultation_type="consultation_id")
+                        e. Show success/failure message. If successful, make a report of the whole procedure from step 1 to final step.
+
+                    Escalation Handling:
+                        - Proactively review lab reports in the chat history for concerning values or patterns
+                        - If you identify issues that require specialist attention, suggest escalation even if doctor hasn't mentioned it
+                        - When suggesting escalation, provide:
+                            1. Medical reasoning based on specific lab values/findings
+                            2. Recommended specialization(s) based on these findings
+                            3. List of 1-3 physicians with the relevant specialization (include SN code and specializations)
+                        
+                        - When the doctor wants to escalate:
+                            1. If they mention a specific specialization:
+                                - Look up physicians with that specialization from the provided list of physicians
+                                - Suggest appropriate specialists with their SN codes
+                                - Example: "I found these Gynecologists: Dr. ID: PCD24A03"
+                            2. Once they confirm a specific physician:
+                                - Use the escalate_procedure tool with the confirmed SN code
+                                - Extract the procedure_id from the input dictionary
+                                - Use escalate_procedure tool with format:
+                                    escalate_procedure(procedure_id, doctor_id)
+                                    where procedure_id is the procedure_id from the session, and the doctor_id is the doctor's SN code
+                                - Provide confirmation of successful escalation or report any issues
+                        
+                        - Look for phrases like "escalate to specialist", "refer to [specialty]", "need a [specialty]", etc.
+                        - The chat history may contain lab reports with specialist recommendations - be attentive to these
 
                     State Management:
-                    - Maintain natural flow while tracking progress implicitly
-                    - Remember previous confirmations in conversation context
+                        - Maintain natural flow while tracking progress implicitly
+                        - Remember previous confirmations in conversation context
                         
                     Important notes:
-                    - Never proceed to next step without explicit confirmation
-                    - Maintain state through chat history
-                    - Always ask for confirmation before submission
-                    - Handle one step at a time
-                    - Always submit all confirmed lab tests in a single request, and you should submit only their corresponding o_id values
-                    - The consultation_type to submit should be the ID value, not the display name
-                    - Be concise but thorough in your communications
-                    - Priority scores range from -100 to 100, where 0 is neutral
-
-                    MOST IMPORTANT: please allow users to enter all information at once and process them without asking them again if a user provide the consultation, the test priority
-                    deal with them and keep that in your memory just ask for the confirmation only and other information which are required but not provided users. 
-
+                        - Never proceed to next step without explicit confirmation
+                        - Maintain state through chat history
+                        - Always ask for confirmation before submission
+                        - Handle one step at a time
+                        - Always submit all confirmed lab tests in a single request, and you should submit only their corresponding o_id values
+                        - The consultation_type to submit should be the ID value, not the display name
+                        - Be concise but thorough in your communications
+                        - Priority scores range from -100 to 100, where 0 is neutral
+                        - For escalation, the doctor only needs to specify a specialty - you should find matching physicians
+                        - Always get final confirmation on a specific physician (with SN code) before escalating
+                        - Be proactive in suggesting escalation when lab results indicate specialist care is needed
                     
                     Remember to be friendly and professional while keeping responses brief and to the point.
                 """
@@ -513,15 +786,17 @@ class LabTestAgent:
             )
             chat_history = []
         
+        procedure_id = self.session_context.get('procedure_id')
         operation_id = self.session_context.get('operation_id')
         input_data = {
             "input": prompt,
+            "procedure_id": procedure_id,
             "operation_id": operation_id,
             "user_id": user_id
         }
         
         result = self.agent.invoke({
-            "input":input_data,
+            "input": input_data,
             "chat_history": chat_history
         })
 
