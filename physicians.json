@@ -124,6 +124,15 @@
         ]
     },
     {
+        "sn": "PCD25A01",
+        "specializations": [
+            {
+                "o_id": 1634177035,
+                "locale_name": "Pediatrics"
+            }
+        ]
+    },
+    {
         "sn": "PCD18A32",
         "specializations": [
             {
@@ -152,15 +161,6 @@
     },
     {
         "sn": "PCD22A00",
-        "specializations": [
-            {
-                "o_id": 461012845,
-                "locale_name": "Internal Medicine"
-            }
-        ]
-    },
-    {
-        "sn": "PCD25A00",
         "specializations": [
             {
                 "o_id": 461012845,
@@ -367,7 +367,7 @@
         ]
     },
     {
-        "sn": "PCD24A03",
+        "sn": "PCD25A00",
         "specializations": [
             {
                 "o_id": 822803227,
