@@ -115,12 +115,9 @@ The system relies on several JSON data files:
 The system has been evaluated by medical professionals with positive feedback on test recognition, result analysis, and abnormality detection. Areas for improvement include workflow efficiency and patient history integration.
 
 ## Contributors
-- [Your Name]
-- [Team Member 1]
-- [Team Member 2]
-
-## License
-[Specify your license here]
+- Elvis Nishimwe Ndabaye (enishimw)
+- Leonard Niyitegeka (lniyiteg)
+- Nirel Kadzo (nkadzo)
 
 ## Acknowledgments
 - OpenAI for GPT-4o
